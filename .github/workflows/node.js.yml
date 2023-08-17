@@ -48,8 +48,12 @@ jobs:
           $store.Close()
           cd C:\Scream\Install\driver
           C:\Scream\Install\helpers\devcon install Scream.inf *Scream
-      - run: npm install -g @bocoup/windows-sapi-tts-engine-for-automation 
+      - run: npm install -g @bocoup/windows-sapi-tts-engine-for-automation
+      - run: RUNNER_TRACKING_ID="" && at-driver > /tmp/at-driver.stdout 2> /tmp/at-driver.stderr &
       - run: choco install nvda
+      - run: |
+          cat /tmp/at-driver.stdout
+          cat /tmp/at-driver.stderr
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
