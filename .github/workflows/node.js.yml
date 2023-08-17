@@ -9,11 +9,13 @@ on:
     paths:
       - '**.js'
       - '**.yml'
+      - '**.json'
   pull_request:
     branches: [main]
     paths:
       - '**.js'
       - '**.yml'
+      - '**.json'
 
 jobs:
   build:
