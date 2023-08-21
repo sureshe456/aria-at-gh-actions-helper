@@ -59,7 +59,6 @@ jobs:
           cd C:\Scream\Install\driver
           C:\Scream\Install\helpers\devcon install Scream.inf *Scream
       - run: npm install -g @bocoup/windows-sapi-tts-engine-for-automation
-      - run: at-driver &
       - run: choco install nvda
       - name: Checkout aria-at
         uses: actions/checkout@v3
@@ -84,4 +83,8 @@ jobs:
           cd automation-harness
           npm install
   
-      - run: node automation-harness/bin/host.js run-plan alert --plan-workingdir "aria-at/tests" --debug
+      - name: Run harness
+        shell: powerhell
+        run: |
+          at-driver &
+          node automation-harness/bin/host.js run-plan alert --plan-workingdir "aria-at/tests" --debug
