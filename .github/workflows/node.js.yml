@@ -84,4 +84,4 @@ jobs:
           cd automation-harness
           npm install
   
-      - run: node automation-harness/bin/host.js run-plan alert --plan-workingdir "aria-at/tests" --verbose
+      - run: node automation-harness/bin/host.js run-plan alert --plan-workingdir "aria-at/tests" --debug
