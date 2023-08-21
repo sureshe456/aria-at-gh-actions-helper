@@ -84,7 +84,7 @@ jobs:
           npm install
   
       - name: Run harness
-        shell: powerhell
+        shell: powershell
         run: |
           at-driver &
           node automation-harness/bin/host.js run-plan alert --plan-workingdir "aria-at/tests" --debug
