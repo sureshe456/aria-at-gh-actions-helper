@@ -86,5 +86,5 @@ jobs:
       - name: Run harness
         shell: powershell
         run: |
-          Start-Job at-driver
+          Start-Job -ScriptBlock { at-driver }
           node automation-harness/bin/host.js run-plan alert --plan-workingdir "aria-at/tests" --debug
