@@ -91,7 +91,7 @@ jobs:
         shell: powershell
         run: |
           copy automation-harness/src/agent/web-driver.js webdriver-orig
-          Get-Content webdriver-orig | % {$_ -replace "firefox" "chrome" -replace "\xEF\xBB\xBF" "" } | Set-Content automation-harness/src/agent/web-driver.js
+          Get-Content webdriver-orig | % {$_ -replace "firefox", "chrome" -replace "\xEF\xBB\xBF", "" } | Set-Content automation-harness/src/agent/web-driver.js
 
 
       # - uses: nanasess/setup-chromedriver@v2
