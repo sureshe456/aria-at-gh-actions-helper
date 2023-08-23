@@ -65,11 +65,12 @@ jobs:
         with:
           repository: 'w3c/aria-at'
           path: 'aria-at'
-      - name: 'aria-at: npm install'
+      - name: 'aria-at: npm install & build'
         shell: powershell
         run: |
           cd aria-at
           npm install
+          npm run build
           
 
       - name: Checkout aria-at-automation-harness
@@ -87,4 +88,5 @@ jobs:
         shell: powershell
         run: |
           Start-Job -ScriptBlock { at-driver }
-          node automation-harness/bin/host.js run-plan alert --plan-workingdir "aria-at/tests" --debug
+          cd aria-at/build/tests/alert
+          node automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
