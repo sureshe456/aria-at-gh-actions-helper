@@ -87,8 +87,14 @@ jobs:
         run: |
           cd automation-harness
           npm install
+      - name: 'patch firefox -> chrome in harness'
+        shell: powershell
+        run: |
+          copy automation-harness/src/agent/web-driver.js webdriver-orig
+          Get-Content webdriver-orig | % {$_.replace("firefox", "chrome")} | Out-File automation-harness/src/agent/web-driver.js
 
-      - uses: nanasess/setup-chromedriver@v2
+
+      # - uses: nanasess/setup-chromedriver@v2
 
       - name: Run harness
         run: |
