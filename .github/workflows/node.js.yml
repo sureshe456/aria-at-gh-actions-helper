@@ -64,7 +64,6 @@ jobs:
           cd C:\Scream\Install\driver
           C:\Scream\Install\helpers\devcon install Scream.inf *Scream
       - run: npm install -g @bocoup/windows-sapi-tts-engine-for-automation
-      - run: choco install nvda
       - name: Checkout aria-at
         uses: actions/checkout@v3
         with:
@@ -93,5 +92,6 @@ jobs:
         shell: powershell
         run: |
           Start-Job -ScriptBlock { at-driver }
+          Start-Job -ScriptBlock { nvda-portable\2023.1.0.27913\NVDA.exe }
           cd aria-at/build/tests/alert
           node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
