@@ -95,6 +95,6 @@ jobs:
            cd aria-at/build/tests/alert
            at-driver &
            chromedriver --port 4444 &
-           .\nvda-portable\2023.1.0.27913\NVDA.exe
+           ..\..\..\..\nvda-portable\2023.1.0.27913\NVDA.exe
            Start-Sleep -Seconds 2
            node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
