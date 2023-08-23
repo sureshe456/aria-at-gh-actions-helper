@@ -97,10 +97,16 @@ jobs:
           nvda-portable\2023.1.0.27913\NVDA.exe *>&1 >nvda.output
           cd aria-at/build/tests/alert
           Start-Sleep -Seconds 2
+          echo "--at-driver.output"
           type ../../../../at-driver.output
-          type ../../../../tmp/chromedriver.output
-          type ../../../../tmp/nvda.output
+          echo "--chromedriver.output"
+          type ../../../../chromedriver.output
+          echo "--nvda.output"
+          type ../../../../nvda.output
           node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
-          type ../../../../tmp/at-driver.output
-          type ../../../../tmp/chromedriver.output
-          type ../../../../tmp/nvda.output
+          echo "--at-driver.output"
+          type ../../../../at-driver.output
+          echo "--chromedriver.output"
+          type ../../../../chromedriver.output
+          echo "--nvda.output"
+          type ../../../../nvda.output
