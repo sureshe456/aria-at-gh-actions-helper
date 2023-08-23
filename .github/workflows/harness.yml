@@ -96,17 +96,17 @@ jobs:
           chromedriver --port=4444 *>&1 >chromedriver.output &
           nvda-portable\2023.1.0.27913\NVDA.exe *>&1 >nvda.output
           cd aria-at/build/tests/alert
-          Start-Sleep -Seconds 2
+          Start-Sleep -Seconds 10
           echo "--at-driver.output"
-          type ../../../../at-driver.output
+          Get-Content -Path ../../../../at-driver.output -ErrorAction Continue
           echo "--chromedriver.output"
-          type ../../../../chromedriver.output
+          Get-Content -Path ../../../../chromedriver.output -ErrorAction Continue
           echo "--nvda.output"
-          type ../../../../nvda.output
+          Get-Content -Path ../../../../nvda.output -ErrorAction Continue
           node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
           echo "--at-driver.output"
-          type ../../../../at-driver.output
+          Get-Content -Path ../../../../at-driver.output -ErrorAction Continue
           echo "--chromedriver.output"
-          type ../../../../chromedriver.output
+          Get-Content -Path ../../../../chromedriver.output -ErrorAction Continue
           echo "--nvda.output"
-          type ../../../../nvda.output
+          Get-Content -Path ../../../../nvda.output -ErrorAction Continue
