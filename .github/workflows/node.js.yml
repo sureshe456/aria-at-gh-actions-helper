@@ -89,4 +89,4 @@ jobs:
         run: |
           Start-Job -ScriptBlock { at-driver }
           cd aria-at/build/tests/alert
-          node automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
+          node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
