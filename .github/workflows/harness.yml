@@ -99,7 +99,7 @@ jobs:
       - name: Run harness
         run: |
           at-driver *>&1 >at-driver.output &
-          chromedriver --port=4444 *>&1 >chromedriver.output &
+          chromedriver --port=4444 --verbose --log-file=chromedriver.output &
           nvda-portable\2023.1.0.27913\NVDA.exe *>&1 >nvda.output
           cd aria-at/build/tests/alert
           Start-Sleep -Seconds 10
