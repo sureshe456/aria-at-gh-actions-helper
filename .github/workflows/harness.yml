@@ -93,7 +93,7 @@ jobs:
       - name: Run harness
         run: |
           at-driver *>&1 >at-driver.output &
-          chromedriver --port 9515 *>&1 >chromedriver.output &
+          chromedriver --port=4444 *>&1 >chromedriver.output &
           nvda-portable\2023.1.0.27913\NVDA.exe *>&1 >nvda.output
           cd aria-at/build/tests/alert
           Start-Sleep -Seconds 2
@@ -103,7 +103,7 @@ jobs:
           type ../../../../chromedriver.output
           echo "--nvda.output"
           type ../../../../nvda.output
-          node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html' --web-driver-url http://localhot:9515/
+          node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
           echo "--at-driver.output"
           type ../../../../at-driver.output
           echo "--chromedriver.output"
