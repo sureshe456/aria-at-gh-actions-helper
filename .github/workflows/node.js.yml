@@ -42,7 +42,7 @@ jobs:
       - run: |
           echo "Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }} ${{ steps.setup-chrome.outputs.chrome-path }}"
       # Installing Scream as a virtual audio driver to avoid this exception installing the sapi
-      # 
+      #
       #
       # npm ERR!   cmd: '"C:\\\\Program Files\\\\Bocoup Automation Voice\\\\Vocalizer.exe"',
       # npm ERR! Unhandled Exception: System.Speech.Internal.Synthesis.AudioException: Audio device error encountered. - Error Code: 0x2
@@ -75,7 +75,7 @@ jobs:
           cd aria-at
           npm install
           npm run build
-          
+
 
       - name: Checkout aria-at-automation-harness
         uses: actions/checkout@v3
@@ -87,21 +87,22 @@ jobs:
         run: |
           cd automation-harness
           npm install
-  
+
       - uses: nanasess/setup-chromedriver@v2
-      
+
       - name: Background at-driver
         run: |
           at-driver &
-  
+
       - name: Background chromedriver
         run: |
           chromedriver --port 4444 &
-      
+
       - name: Background nvda
         run: |
           .\nvda-portable\2023.1.0.27913\NVDA.exe
-  
+
       - name: Run harness
         run: |
+           cd aria-at/build/tests/alert
            node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
