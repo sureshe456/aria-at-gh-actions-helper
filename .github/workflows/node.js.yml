@@ -88,10 +88,20 @@ jobs:
           cd automation-harness
           npm install
   
-      - name: Run harness
-        shell: powershell
+      - uses: nanasess/setup-chromedriver@v2
+      
+      - name: Background at-driver
         run: |
-          Start-Job -ScriptBlock { at-driver }
+          at-driver &
+  
+      - name: Background chromedriver
+        run: |
+          chromedriver --port 4444 &
+      
+      - name: Background nvda
+        run: |
           .\nvda-portable\2023.1.0.27913\NVDA.exe
-          cd aria-at/build/tests/alert
-          node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
+  
+      - name: Run harness
+        run: |
+           node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
