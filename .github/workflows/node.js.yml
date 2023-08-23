@@ -92,7 +92,7 @@ jobs:
 
       - name: Background at-driver
         run: |
-          at-driver &
+          at-driver
 
       - name: Background chromedriver
         run: |
