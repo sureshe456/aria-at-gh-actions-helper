@@ -88,12 +88,9 @@ jobs:
         run: |
           cd automation-harness
           npm install
-      - name: 'patch firefox -> chrome in harness'
+      - name: 'testing idea - autohotkey removes foreground lock?'
         shell: powershell
-        run: |
-          copy automation-harness/src/agent/web-driver.js webdriver-orig
-          Get-Content webdriver-orig | % {$_ -replace "firefox", "chrome" -replace "\xEF\xBB\xBF", "" } | Set-Content automation-harness/src/agent/web-driver.js
-
+        run: choco install autohotkey
 
       # - uses: nanasess/setup-chromedriver@v2
 
