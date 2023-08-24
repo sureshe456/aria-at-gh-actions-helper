@@ -88,11 +88,6 @@ jobs:
         run: |
           cd automation-harness
           npm install
-      - name: 'testing idea - autohotkey removes foreground lock?'
-        shell: powershell
-        run: choco install autohotkey
-
-      # - uses: nanasess/setup-chromedriver@v2
 
       - name: Run harness
         run: |
