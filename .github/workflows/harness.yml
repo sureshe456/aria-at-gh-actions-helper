@@ -35,10 +35,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - uses: ChlodAlejandro/setup-firefox@latest
-      - uses: browser-actions/setup-geckodriver@latest
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: browser-actions/setup-firefox@v1
 
       - uses: browser-actions/setup-chrome@v1
         with:
