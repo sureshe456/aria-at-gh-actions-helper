@@ -82,6 +82,7 @@ jobs:
         with:
           repository: 'w3c/aria-at-automation-harness'
           path: 'automation-harness'
+          ref: gnarf-testing
       - name: 'automation-harness: npm install'
         shell: powershell
         run: |
