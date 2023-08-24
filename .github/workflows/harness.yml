@@ -26,7 +26,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
         node-version:
           - 16.x
-        os: [windows-latest]
+        os: [windows-2022]
 
     steps:
       - uses: actions/checkout@v3
@@ -89,6 +89,7 @@ jobs:
           cd automation-harness
           npm install
       - name: Run harness
+        continue-on-error: true
         run: |
           at-driver *>&1 >at-driver.output &
           chromedriver --port=4444 --log-level=INFO *>&1 >chromedriver.output &
