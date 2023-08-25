@@ -1,8 +1,8 @@
-Start-Job -SciptBlock { at-driver *>&1 >at-driver.output }
+Start-Job -ScriptBlock { at-driver *>&1 >at-driver.output }
 Start-Sleep -Seconds 10
-Start-Job -SciptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >chromedriver.output }
+Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >chromedriver.output }
 Start-Sleep -Seconds 10
-nvda-portable\2023.1.0.27913\NVDA.exe *>&1 >nvda.output
+start nvda-portable\2023.1.0.27913\NVDA.exe
 Start-Sleep -Seconds 10
 cd aria-at/build/tests/alert
 Start-Sleep -Seconds 10
@@ -10,8 +10,6 @@ echo "--at-driver.output"
 Get-Content -Path ../../../../at-driver.output -ErrorAction Continue
 echo "--chromedriver.output"
 Get-Content -Path ../../../../chromedriver.output -ErrorAction Continue
-echo "--nvda.output"
-Get-Content -Path ../../../../nvda.output -ErrorAction Continue
 echo "--nvda.log???"
 Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
 
@@ -41,7 +39,5 @@ echo "--at-driver.output"
 Get-Content -Path ../../../../at-driver.output -ErrorAction Continue
 echo "--chromedriver.output"
 Get-Content -Path ../../../../chromedriver.output -ErrorAction Continue
-echo "--nvda.output"
-Get-Content -Path ../../../../nvda.output -ErrorAction Continue
 echo "--nvda.log???"
 Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
