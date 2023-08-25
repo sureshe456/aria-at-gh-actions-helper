@@ -2,7 +2,7 @@ Start-Job -ScriptBlock { at-driver *>&1 >$env:TEMP\at-driver.output }
 Start-Sleep -Seconds 10
 Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >$env:TEMP\chromedriver.output }
 Start-Sleep -Seconds 10
-start nvda-portable\2023.1.0.27913\NVDA.exe
+start nvda-portable\2023.1.0.27913\NVDA.exe --debug-logging
 Start-Sleep -Seconds 10
 cd aria-at/build/tests/alert
 Start-Sleep -Seconds 10
@@ -36,7 +36,6 @@ node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match '
 Start-Process notepad
 
 Start-Sleep -Seconds 10
-
 $graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("D:\a\aria-at-gh-actions-helper\test2.png")
 $graphics.Dispose()
