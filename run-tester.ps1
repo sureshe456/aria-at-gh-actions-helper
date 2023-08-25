@@ -2,7 +2,7 @@ Start-Job -ScriptBlock { at-driver *>&1 >$env:TEMP\at-driver.output }
 Start-Sleep -Seconds 10
 Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >$env:TEMP\chromedriver.output }
 Start-Sleep -Seconds 10
-start nvda-portable\2023.1.0.27913\NVDA.exe --install --debug-logging
+nvda-portable\2023.1.0.27913\NVDA.exe --install --debug-logging
 Start-Sleep -Seconds 10
 cd aria-at/build/tests/alert
 Start-Sleep -Seconds 10
