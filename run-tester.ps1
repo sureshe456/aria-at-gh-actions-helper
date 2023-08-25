@@ -41,6 +41,8 @@ $bmp.Save("D:\a\aria-at-gh-actions-helper\test2.png")
 $graphics.Dispose()
 $bmp.Dispose()
 
+get-process
+
 echo "--at-driver.output"
 Get-Content -Path $env:TEMP\at-driver.output -ErrorAction Continue
 echo "--chromedriver.output"
