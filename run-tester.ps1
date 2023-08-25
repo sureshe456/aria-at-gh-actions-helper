@@ -31,14 +31,13 @@ $graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("D:\a\aria-at-gh-actions-helper\test.png")
 
 
-node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*.json' '**/*.html'
-
-$graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
+node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*nvda*.json' '**/*.html'
 
 Start-Process notepad
 
 Start-Sleep -Seconds 10
 
+$graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("D:\a\aria-at-gh-actions-helper\test2.png")
 $graphics.Dispose()
 $bmp.Dispose()
