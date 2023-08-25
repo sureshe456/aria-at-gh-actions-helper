@@ -92,7 +92,7 @@ jobs:
         shell: powershell
         continue-on-error: true
         run: |
-          ./run-tester.ps1
+          start powershell {.\run-tester.ps1}
 
       - name: upload screenshot
         uses: actions/upload-artifact@v3
