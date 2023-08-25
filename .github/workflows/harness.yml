@@ -99,5 +99,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-screenshot
-          path: D:\a\aria-at-gh-actions-helper\test.png
+          path: D:\a\aria-at-gh-actions-helper\*.png
 
