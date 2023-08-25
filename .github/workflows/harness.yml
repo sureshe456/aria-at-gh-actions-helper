@@ -89,6 +89,7 @@ jobs:
           cd automation-harness
           npm install
       - name: Run harness
+        shell: powershell
         continue-on-error: true
         run: |
           at-driver *>&1 >at-driver.output &
@@ -106,7 +107,7 @@ jobs:
           echo "--nvda.output"
           Get-Content -Path ../../../../nvda.output -ErrorAction Continue
           echo "--nvda.log???"
-          Get-Content -Path %tmp\nvda.log -ErrorAction Continue
+          Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
 
           Add-Type -AssemblyName System.Windows.Forms,System.Drawing
 
@@ -137,7 +138,7 @@ jobs:
           echo "--nvda.output"
           Get-Content -Path ../../../../nvda.output -ErrorAction Continue
           echo "--nvda.log???"
-          Get-Content -Path %tmp\nvda.log -ErrorAction Continue
+          Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
 
       - name: upload screenshot
         uses: actions/upload-artifact@v3
