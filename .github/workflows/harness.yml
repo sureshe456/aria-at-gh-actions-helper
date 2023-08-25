@@ -92,8 +92,11 @@ jobs:
         continue-on-error: true
         run: |
           at-driver *>&1 >at-driver.output &
+          Start-Sleep -Seconds 10
           chromedriver --port=4444 --log-level=INFO *>&1 >chromedriver.output &
+          Start-Sleep -Seconds 10
           nvda-portable\2023.1.0.27913\NVDA.exe *>&1 >nvda.output
+          Start-Sleep -Seconds 10
           cd aria-at/build/tests/alert
           Start-Sleep -Seconds 10
           echo "--at-driver.output"
