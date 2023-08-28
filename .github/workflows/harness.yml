@@ -66,6 +66,7 @@ jobs:
           cd C:\Scream\Install\driver
           C:\Scream\Install\helpers\devcon install Scream.inf *Scream
       - run: npm install -g @bocoup/windows-sapi-tts-engine-for-automation
+      - run: dir "C:\Program Files\Bocoup Automation Voice"
       - name: Checkout aria-at
         uses: actions/checkout@v3
         with:
