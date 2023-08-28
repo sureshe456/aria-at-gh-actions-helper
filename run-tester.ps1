@@ -1,3 +1,6 @@
+$env:WORDS = "testing 1 2 3"
+"C:\Program Files\Bocoup Automation Voice\Vocalizer.exe"
+
 Start-Job -ScriptBlock { at-driver *>&1 >$env:TEMP\at-driver.output }
 Start-Sleep -Seconds 10
 Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >$env:TEMP\chromedriver.output }
