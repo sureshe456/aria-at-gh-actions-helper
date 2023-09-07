@@ -1,6 +1,6 @@
 nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
 Start-Sleep -Seconds 10
-Start-Job -ScriptBlock { & .\start-at-driver.ps1 }
+Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd'")) -ScriptBlock { & .\start-at-driver.ps1 }
 Start-Sleep -Seconds 10
 Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >chromedriver.log }
 Start-Sleep -Seconds 10
