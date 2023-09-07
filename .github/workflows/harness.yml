@@ -117,6 +117,6 @@ jobs:
         with:
           name: test-screenshot
           path: |
-            D:\a\aria-at-gh-actions-helper\*.png
-            D:\a\aria-at-gh-actions-helper\*.log
+            D:\a\aria-at-gh-actions-helper\aria-at-gh-actions-helper\*.log
+            D:\a\aria-at-gh-actions-helper\aria-at-gh-actions-helper\*.png
 
