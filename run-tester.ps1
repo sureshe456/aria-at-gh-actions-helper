@@ -1,22 +1,26 @@
-nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
+nvda-portable\2022.3.0.26722\NVDA.exe # --debug-logging
 Start-Sleep -Seconds 10
 $atprocess = Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd\nvda-at-automation\Server'")) -ScriptBlock { & .\main.exe 2>&1 >..\..\at-driver.log }
 Start-Sleep -Seconds 10
-$chromeprocess = Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >chromedriver.log }
+$chromeprocess = Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd'")) -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >chromedriver.log }
 Start-Sleep -Seconds 10
-cd aria-at-automation-harness
 
+Set-Location aria-at-automation-harness
 
-Write-Output "At-Driver job process log:"
-Receive-Job $atprocess
-Write-Output "--at-driver.log"
-Get-Content -Path at-driver.log -ErrorAction Continue
-Write-Output "chromedriver job process log:"
-Receive-Job $chromeprocess
-Write-Output "--chromedriver.log"
-Get-Content -Path chromedriver.log -ErrorAction Continue
-Write-Output "--nvda.log???"
-Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
+function Trace-Logs {
+  Write-Output "At-Driver job process log:"
+  Receive-Job $atprocess
+  Write-Output "--at-driver.log"
+  Get-Content -Path ..\at-driver.log -ErrorAction Continue
+  Write-Output "chromedriver job process log:"
+  Receive-Job $chromeprocess
+  Write-Output "--chromedriver.log"
+  Get-Content -Path ..\chromedriver.log -ErrorAction Continue
+  Write-Output "--nvda.log???"
+  Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
+}
+
+Trace-Logs
 
 Add-Type -AssemblyName System.Windows.Forms,System.Drawing
 
@@ -51,9 +55,4 @@ $bmp.Dispose()
 get-process > .\get-process.log
 Copy-Item -Path $env:TEMP\nvda.log -Destination D:\a\aria-at-gh-actions-helper\ -ErrorAction Continue
 
-echo "--at-driver.log"
-Get-Content -Path at-driver.log -ErrorAction Continue
-echo "--chromedriver.log"
-Get-Content -Path chromedriver.log -ErrorAction Continue
-echo "--nvda.log???"
-Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
+Trace-Logs
