@@ -1,19 +1,15 @@
 nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
 Start-Sleep -Seconds 10
-cd nvda-at-automation\Server
-# Start-Job -ScriptBlock {
-  .\main.exe *>&1 | Tee-Object -FilePath $env:TEMP\at-driver.log
-# }
-cd ..\..
+Start-Job -ScriptBlock { & .\start-at-driver.ps1 }
 Start-Sleep -Seconds 10
-Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >$env:TEMP\chromedriver.log }
+Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >chromedriver.log }
 Start-Sleep -Seconds 10
 cd aria-at-automation-harness
 
 echo "--at-driver.log"
-Get-Content -Path $env:TEMP\at-driver.log -ErrorAction Continue
+Get-Content -Path at-driver.log -ErrorAction Continue
 echo "--chromedriver.log"
-Get-Content -Path $env:TEMP\chromedriver.log -ErrorAction Continue
+Get-Content -Path chromedriver.log -ErrorAction Continue
 echo "--nvda.log???"
 Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
 
@@ -48,13 +44,11 @@ $graphics.Dispose()
 $bmp.Dispose()
 
 get-process > .\get-process.log
-Copy-Item -Path $env:TEMP\at-driver.log -Destination D:\a\aria-at-gh-actions-helper\ -ErrorAction Continue
-Copy-Item -Path $env:TEMP\chromedriver.log -Destination D:\a\aria-at-gh-actions-helper\ -ErrorAction Continue
 Copy-Item -Path $env:TEMP\nvda.log -Destination D:\a\aria-at-gh-actions-helper\ -ErrorAction Continue
 
 echo "--at-driver.log"
-Get-Content -Path $env:TEMP\at-driver.log -ErrorAction Continue
+Get-Content -Path at-driver.log -ErrorAction Continue
 echo "--chromedriver.log"
-Get-Content -Path $env:TEMP\chromedriver.log -ErrorAction Continue
+Get-Content -Path chromedriver.log -ErrorAction Continue
 echo "--nvda.log???"
 Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
