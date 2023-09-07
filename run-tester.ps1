@@ -44,7 +44,9 @@ $graphics.Dispose()
 $bmp.Dispose()
 
 get-process > .\get-process.log
-Copy-Item $env:TEMP\at-driver.log $env:TEMP\chromedriver.log $env:TEMP\nvda.log .
+Copy-Item -Path $env:TEMP\at-driver.log -Destination D:\a\aria-at-gh-actions-helper\ -ErrorAction Continue
+Copy-Item -Path $env:TEMP\chromedriver.log -Destination D:\a\aria-at-gh-actions-helper\ -ErrorAction Continue
+Copy-Item -Path $env:TEMP\nvda.log -Destination D:\a\aria-at-gh-actions-helper\ -ErrorAction Continue
 
 echo "--at-driver.log"
 Get-Content -Path $env:TEMP\at-driver.log -ErrorAction Continue
