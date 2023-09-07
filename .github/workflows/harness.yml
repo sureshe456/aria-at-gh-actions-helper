@@ -99,12 +99,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: 'bocoup/aria-at-automation-harness'
-          path: 'automation-harness'
+          path: 'aria-at-automation-harness'
           ref: pac-nvda
       - name: 'automation-harness: npm install'
         shell: powershell
         run: |
-          cd automation-harness
+          cd aria-at-automation-harness
           npm install
       - name: Run harness
         shell: powershell
