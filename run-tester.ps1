@@ -1,16 +1,21 @@
 nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
 Start-Sleep -Seconds 10
-Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd\nvda-at-automation\Server'")) -ScriptBlock { & .\main.exe 2>&1 >..\..\at-driver.log }
+$atprocess = Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd\nvda-at-automation\Server'")) -ScriptBlock { & .\main.exe 2>&1 >..\..\at-driver.log }
 Start-Sleep -Seconds 10
-Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >chromedriver.log }
+$chromeprocess = Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >chromedriver.log }
 Start-Sleep -Seconds 10
 cd aria-at-automation-harness
 
-echo "--at-driver.log"
+
+Write-Output "At-Driver job process log:"
+Receive-Job $atprocess
+Write-Output "--at-driver.log"
 Get-Content -Path at-driver.log -ErrorAction Continue
-echo "--chromedriver.log"
+Write-Output "chromedriver job process log:"
+Receive-Job $chromeprocess
+Write-Output "--chromedriver.log"
 Get-Content -Path chromedriver.log -ErrorAction Continue
-echo "--nvda.log???"
+Write-Output "--nvda.log???"
 Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
 
 Add-Type -AssemblyName System.Windows.Forms,System.Drawing
