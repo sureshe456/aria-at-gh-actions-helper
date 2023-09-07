@@ -106,6 +106,7 @@ jobs:
         run: |
           cd aria-at-automation-harness
           npm install
+      - run: .\nvda-at-automation\Server\main.exe
       - name: Run harness
         shell: powershell
         continue-on-error: true
