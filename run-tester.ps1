@@ -1,9 +1,21 @@
+
+$loglocation = $pwd
+Write-Output "Log folder $loglocation"
+
 Write-Output "Starting NVDA"
 nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
 Start-Sleep -Seconds 10
 
-$loglocation = $pwd
-Write-Output "Log folder $loglocation"
+try {
+  Invoke-WebRequest -UseBasicParsing -Uri http://localhost:8765/info | Tee-Object $loglocation\localhost-test-8765.log
+}
+catch {
+}
+try {
+  Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:8765/info | Tee-Object $loglocation\localhost-test-8765.log
+}
+catch {
+}
 
 Write-Output "Starting at-driver"
 $atprocess = Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd\nvda-at-automation\Server'")) -ScriptBlock { & .\main.exe 2>&1 >$using:loglocation\at-driver.log }
