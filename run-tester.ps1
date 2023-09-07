@@ -1,7 +1,7 @@
 nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
 Start-Sleep -Seconds 10
 cd nvda-at-automation\Server
-Start-Job -ScriptBlock { .\main.exe *>&1 >$env:TEMP\at-driver.log }
+Start-Job -ScriptBlock { .\main.exe *>&1 | Tee-Object -FilePath $env:TEMP\at-driver.log }
 cd ..\..
 Start-Sleep -Seconds 10
 Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >$env:TEMP\chromedriver.log }
