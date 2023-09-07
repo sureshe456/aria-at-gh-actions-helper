@@ -52,21 +52,36 @@ jobs:
       # npm ERR!    at System.Speech.Synthesis.SpeechSynthesizer.Speak(Prompt prompt)
       # npm ERR!    at main(String[] args)
       # npm ERR!    at mainCRTStartupStrArray(String[] arguments)
-      - name: Install Scream
+      # - name: Install Scream
+      #   shell: powershell
+      #   run: |
+      #     Start-Service audio*
+      #     Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.6/Scream3.6.zip -OutFile C:\Scream3.6.zip
+      #     Extract-7Zip -Path C:\Scream3.6.zip -DestinationPath C:\Scream
+      #     $cert = (Get-AuthenticodeSignature C:\Scream\Install\driver\Scream.sys).SignerCertificate
+      #     $store = [System.Security.Cryptography.X509Certificates.X509Store]::new("TrustedPublisher", "LocalMachine")
+      #     $store.Open("ReadWrite")
+      #     $store.Add($cert)
+      #     $store.Close()
+      #     cd C:\Scream\Install\driver
+      #     C:\Scream\Install\helpers\devcon install Scream.inf *Scream
+      # - run: npm install -g @bocoup/windows-sapi-tts-engine-for-automation
+      # - run: dir "C:\Program Files\Bocoup Automation Voice"
+
+      - uses: actions/setup-go@v4
+
+      - name: Checkout nvda-at-automation driver
+        uses: actions/checkout@v3
+        with:
+          repository: 'Prime-Access-Consulting/nvda-at-automation'
+          path: 'nvda-at-automation'
+
+      - name: Compile at-automation driver
         shell: powershell
         run: |
-          Start-Service audio*
-          Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.6/Scream3.6.zip -OutFile C:\Scream3.6.zip
-          Extract-7Zip -Path C:\Scream3.6.zip -DestinationPath C:\Scream
-          $cert = (Get-AuthenticodeSignature C:\Scream\Install\driver\Scream.sys).SignerCertificate
-          $store = [System.Security.Cryptography.X509Certificates.X509Store]::new("TrustedPublisher", "LocalMachine")
-          $store.Open("ReadWrite")
-          $store.Add($cert)
-          $store.Close()
-          cd C:\Scream\Install\driver
-          C:\Scream\Install\helpers\devcon install Scream.inf *Scream
-      - run: npm install -g @bocoup/windows-sapi-tts-engine-for-automation
-      - run: dir "C:\Program Files\Bocoup Automation Voice"
+          cd nvda-at-automation\Server
+          go build main\main.go
+
       - name: Checkout aria-at
         uses: actions/checkout@v3
         with:
@@ -83,9 +98,9 @@ jobs:
       - name: Checkout aria-at-automation-harness
         uses: actions/checkout@v3
         with:
-          repository: 'w3c/aria-at-automation-harness'
+          repository: 'bocoup/aria-at-automation-harness'
           path: 'automation-harness'
-          ref: gnarf-testing
+          ref: pac-nvda
       - name: 'automation-harness: npm install'
         shell: powershell
         run: |
@@ -101,5 +116,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-screenshot
-          path: D:\a\aria-at-gh-actions-helper\*.png
+          path: |
+            D:\a\aria-at-gh-actions-helper\*.png
+            D:\a\aria-at-gh-actions-helper\*.log
 

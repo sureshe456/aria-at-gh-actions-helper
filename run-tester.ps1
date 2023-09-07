@@ -1,18 +1,15 @@
-$env:WORDS = "testing 1 2 3"
-"C:\Program Files\Bocoup Automation Voice\Vocalizer.exe"
+Start-Job -ScriptBlock { .\nvda-at-automation\Server\main.exe *>&1 >$env:TEMP\at-driver.log }
+Start-Sleep -Seconds 10
+Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >$env:TEMP\chromedriver.log }
+Start-Sleep -Seconds 10
+nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
+Start-Sleep -Seconds 10
+cd aria-at-automation-harness
 
-Start-Job -ScriptBlock { at-driver *>&1 >$env:TEMP\at-driver.output }
-Start-Sleep -Seconds 10
-Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >$env:TEMP\chromedriver.output }
-Start-Sleep -Seconds 10
-nvda-portable\2023.1.0.27913\NVDA.exe --debug-logging
-Start-Sleep -Seconds 10
-cd aria-at/build/tests/alert
-Start-Sleep -Seconds 10
-echo "--at-driver.output"
-Get-Content -Path $env:TEMP\at-driver.output -ErrorAction Continue
-echo "--chromedriver.output"
-Get-Content -Path $env:TEMP\chromedriver.output -ErrorAction Continue
+echo "--at-driver.log"
+Get-Content -Path $env:TEMP\at-driver.log -ErrorAction Continue
+echo "--chromedriver.log"
+Get-Content -Path $env:TEMP\chromedriver.log -ErrorAction Continue
 echo "--nvda.log???"
 Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
 
@@ -34,21 +31,26 @@ $graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("D:\a\aria-at-gh-actions-helper\test.png")
 
 
-node ../../../../automation-harness/bin/host.js run-plan --debug --tests-match 'test-01-trigger-alert*nvda*.json' '**/*.html'
-
-Start-Process notepad
-
-Start-Sleep -Seconds 10
+node bin/host.js  run-plan --plan-workingdir ../aria-at/build/tests/alert "reference/**,test-01-*-nvda.*" --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031 --reference-hostname=127.0.0.1 --debug --agent-debug
 $graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("D:\a\aria-at-gh-actions-helper\test2.png")
 $graphics.Dispose()
 $bmp.Dispose()
 
-get-process
+Start-Process notepad
 
-echo "--at-driver.output"
-Get-Content -Path $env:TEMP\at-driver.output -ErrorAction Continue
-echo "--chromedriver.output"
-Get-Content -Path $env:TEMP\chromedriver.output -ErrorAction Continue
+Start-Sleep -Seconds 10
+$graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
+$bmp.Save("D:\a\aria-at-gh-actions-helper\test3.png")
+$graphics.Dispose()
+$bmp.Dispose()
+
+get-process > .\get-process.log
+Copy-Item $env:TEMP\at-driver.log $env:TEMP\chromedriver.log $env:TEMP\nvda.log .
+
+echo "--at-driver.log"
+Get-Content -Path $env:TEMP\at-driver.log -ErrorAction Continue
+echo "--chromedriver.log"
+Get-Content -Path $env:TEMP\chromedriver.log -ErrorAction Continue
 echo "--nvda.log???"
 Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
