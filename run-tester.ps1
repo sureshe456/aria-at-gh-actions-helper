@@ -1,10 +1,19 @@
 nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
 $loglocation = $pwd
 Start-Sleep -Seconds 10
+try {
+  Invoke-WebRequest -UseBasicParsing http://localhost:8765/info
+}
+catch {
+  <#Do this if a terminating exception happens#>
+}
 
-Invoke-WebRequest -UseBasicParsing http://localhost:8765/info -ErrorAction Continue
-
-Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8765/info -ErrorAction Continue
+try {
+  Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8765/info
+}
+catch {
+  <#Do this if a terminating exception happens#>
+}
 
 Write-Output "Log folder $loglocation"
 
