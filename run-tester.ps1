@@ -1,8 +1,8 @@
+nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
+Start-Sleep -Seconds 10
 Start-Job -ScriptBlock { .\nvda-at-automation\Server\main.exe *>&1 >$env:TEMP\at-driver.log }
 Start-Sleep -Seconds 10
 Start-Job -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >$env:TEMP\chromedriver.log }
-Start-Sleep -Seconds 10
-nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
 Start-Sleep -Seconds 10
 cd aria-at-automation-harness
 
@@ -31,7 +31,7 @@ $graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("D:\a\aria-at-gh-actions-helper\test.png")
 
 
-node bin/host.js  run-plan --plan-workingdir ../aria-at/build/tests/alert "reference/**,test-01-*-nvda.*" --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031 --reference-hostname=127.0.0.1 --debug --agent-debug
+node bin/host.js  run-plan --plan-workingdir ../aria-at/build/tests/alert "reference/**,test-01-*-nvda.*" --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031 --reference-hostname=127.0.0.1 --debug --agent-debug | Tee-Object -FilePath ..\harness-run.log
 $graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("D:\a\aria-at-gh-actions-helper\test2.png")
 
