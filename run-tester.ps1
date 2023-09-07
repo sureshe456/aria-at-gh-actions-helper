@@ -2,9 +2,9 @@ nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
 $loglocation = $pwd
 Start-Sleep -Seconds 10
 
-Invoke-WebRequest -UseBasicParsing http://localhost:8765/info
+Invoke-WebRequest -UseBasicParsing http://localhost:8765/info -ErrorAction Continue
 
-Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8765/info
+Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8765/info -ErrorAction Continue
 
 Write-Output "Log folder $loglocation"
 
