@@ -12,7 +12,7 @@ try {
 catch {
 }
 try {
-  Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:8765/info | Tee-Object $loglocation\localhost-test-8765.log
+  Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:8765/info | Tee-Object $loglocation\127.0.0.1-test-8765.log
 }
 catch {
 }
