@@ -1,9 +1,13 @@
 nvda-portable\2022.3.0.26722\NVDA.exe --debug-logging
 $loglocation = $pwd
+Start-Sleep -Seconds 10
+
+Invoke-WebRequest -UseBasicParsing http://localhost:8765/info
+
+Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8765/info
 
 Write-Output "Log folder $loglocation"
 
-Start-Sleep -Seconds 10
 $atprocess = Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd\nvda-at-automation\Server'")) -ScriptBlock { & .\main.exe 2>&1 >$using:loglocation\at-driver.log }
 Start-Sleep -Seconds 10
 $chromeprocess = Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd'")) -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >$using:loglocation\chromedriver.log }
