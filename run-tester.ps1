@@ -2,6 +2,8 @@
 $loglocation = $pwd
 Write-Output "Log folder $loglocation"
 
+Expand-Archive -Path nvda-portable\2023.2.0.29051.zip -DestinationPath nvda-portable\2023.2.0.29051\
+
 Write-Output "Starting NVDA"
 nvda-portable\2023.2.0.29051\NVDA.exe --debug-logging --disable-addons
 Start-Sleep -Seconds 10
