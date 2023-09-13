@@ -5,7 +5,7 @@ Write-Output "Log folder $loglocation"
 Expand-Archive -Path nvda-portable\2023.2.0.29051.zip -DestinationPath nvda-portable\
 
 Write-Output "Starting NVDA"
-nvda-portable\2023.2.0.29051\NVDA.exe --debug-logging --disable-addons
+nvda-portable\2023.2.0.29051\NVDA.exe --debug-logging
 Start-Sleep -Seconds 10
 
 # Spooky things... If we don't first probe the service like this, the startup of at-driver seems to fail later
