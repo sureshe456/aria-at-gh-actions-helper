@@ -56,7 +56,7 @@ $bmp.Save("$loglocation\test.png")
 Write-Output "Launching automation-harness host"
 Set-Location aria-at-automation-harness
 
-node bin/host.js  run-plan --plan-workingdir ../aria-at/build/tests/alert "reference/**,test-01-*-nvda.*" --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031 --reference-hostname=127.0.0.1 --agent-web-driver-browser=chrome --debug --agent-debug | Tee-Object -FilePath $loglocation\harness-run.log
+node bin/host.js  run-plan --plan-workingdir ../aria-at/build/tests/alert "reference/**,test-01-*-nvda.*" --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031/command --reference-hostname=127.0.0.1 --agent-web-driver-browser=chrome --debug --agent-debug | Tee-Object -FilePath $loglocation\harness-run.log
 
 $graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("$loglocation\test2.png")
