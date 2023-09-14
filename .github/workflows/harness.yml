@@ -68,13 +68,15 @@ jobs:
       # - run: npm install -g @bocoup/windows-sapi-tts-engine-for-automation
       # - run: dir "C:\Program Files\Bocoup Automation Voice"
 
-      - uses: actions/setup-go@v4
-
       - name: Checkout nvda-at-automation driver
         uses: actions/checkout@v3
         with:
           repository: 'Prime-Access-Consulting/nvda-at-automation'
           path: 'nvda-at-automation'
+
+      - uses: actions/setup-go@v4
+        with:
+          cache-dependency-path: nvda-at-automation/Server/go.sum
 
       - name: Compile at-automation driver
         shell: powershell
