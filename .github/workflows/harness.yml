@@ -73,7 +73,11 @@ jobs:
       - name: Checkout nvda-at-automation driver
         uses: actions/checkout@v3
         with:
-          repository: 'Prime-Access-Consulting/nvda-at-automation'
+          # repository: 'Prime-Access-Consulting/nvda-at-automation'
+
+          # temporarily using gnarf's fork for a patch to update ID params
+          repository: 'gnarf/nvda-at-automation'
+          ref: 'id-uint'
           path: 'nvda-at-automation'
 
       - name: Compile at-automation driver
