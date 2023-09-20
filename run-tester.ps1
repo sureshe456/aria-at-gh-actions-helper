@@ -7,14 +7,22 @@ Expand-Archive -Path nvda-portable\2023.2.0.29051.zip -DestinationPath nvda-port
 
 Write-Output "Starting NVDA"
 nvda-portable\2023.2.0.29051\NVDA.exe --debug-logging
-Start-Sleep -Seconds 10
 
 # Spooky things... If we don't first probe the service like this, the startup of at-driver seems to fail later
-try {
-  Invoke-WebRequest -UseBasicParsing -Uri http://localhost:8765/info | Tee-Object $loglocation\localhost-test-8765.log
+Write-Output "Waiting for localhost:8765 to start from NVDA"
+$status = "Failed"
+for (($sleeps=1); $sleeps -le 30; $sleeps++)
+{
+  try {
+    Invoke-WebRequest -UseBasicParsing -Uri http://localhost:8765/info > Tee-Object $loglocation\localhost-test-8765.log
+    $status = "Success"
+    break
+  }
+  catch {
+    Start-Sleep -Seconds 1
+  }
 }
-catch {
-}
+Write-Output "$status after $sleeps tries"
 
 Write-Output "Starting at-driver"
 $atprocess = Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd\nvda-at-automation\Server'")) -ScriptBlock { & .\main.exe 2>&1 >$using:loglocation\at-driver.log }
