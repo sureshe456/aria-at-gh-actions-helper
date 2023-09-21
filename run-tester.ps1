@@ -5,8 +5,13 @@ Write-Output "Log folder $loglocation"
 # The zip file contains the folder 2023.2.0.29051 - unzip it in the "parent directory"
 Expand-Archive -Path nvda-portable\2023.2.0.29051.zip -DestinationPath nvda-portable\
 
+$nvdaParams = ""
+if ($env:RUNNER_DEBUG)
+{
+  $nvdaParams = "--debug-logging"
+}
 Write-Output "Starting NVDA"
-nvda-portable\2023.2.0.29051\NVDA.exe --debug-logging
+nvda-portable\2023.2.0.29051\NVDA.exe $nvdaParams
 
 # Retries to connect to an http url, allowing for any valid "response" (4xx,5xx,etc also valid)
 function Wait-For-HTTP-Response {
@@ -50,16 +55,19 @@ Write-Output "Waiting for localhost:4444 to start from chromedriver"
 Wait-For-HTTP-Response -RequestURL http://localhost:4444/
 
 function Trace-Logs {
-  Write-Output "At-Driver job process log:"
-  Receive-Job $atprocess
-  Write-Output "--at-driver.log"
-  Get-Content -Path $loglocation\at-driver.log -ErrorAction Continue
-  Write-Output "chromedriver job process log:"
-  Receive-Job $chromeprocess
-  Write-Output "--chromedriver.log"
-  Get-Content -Path $loglocation\chromedriver.log -ErrorAction Continue
-  Write-Output "--nvda.log"
-  Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
+  if ($env:RUNNER_DEBUG)
+  {
+    Write-Output "At-Driver job process log:"
+    Receive-Job $atprocess
+    Write-Output "--at-driver.log"
+    Get-Content -Path $loglocation\at-driver.log -ErrorAction Continue
+    Write-Output "chromedriver job process log:"
+    Receive-Job $chromeprocess
+    Write-Output "--chromedriver.log"
+    Get-Content -Path $loglocation\chromedriver.log -ErrorAction Continue
+    Write-Output "--nvda.log"
+    Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
+  }
 }
 
 Trace-Logs
@@ -81,7 +89,12 @@ $bmp.Save("$loglocation\test.png")
 Write-Output "Launching automation-harness host"
 Set-Location aria-at-automation-harness
 
-node bin/host.js  run-plan --plan-workingdir ../aria-at/build/tests/alert "reference/**,test-*-nvda.*" --debug --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031/command --reference-hostname=127.0.0.1 --agent-web-driver-browser=chrome | Tee-Object -FilePath $loglocation\harness-run.log
+$hostParams = ""
+if ($env:RUNNER_DEBUG)
+{
+  $hostParams = "--debug"
+}
+node bin/host.js  run-plan --plan-workingdir ../aria-at/build/tests/alert "reference/**,test-*-nvda.*" $hostParams --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031/command --reference-hostname=127.0.0.1 --agent-web-driver-browser=chrome | Tee-Object -FilePath $loglocation\harness-run.log
 
 $graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("$loglocation\test2.png")
