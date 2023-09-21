@@ -8,29 +8,45 @@ Expand-Archive -Path nvda-portable\2023.2.0.29051.zip -DestinationPath nvda-port
 Write-Output "Starting NVDA"
 nvda-portable\2023.2.0.29051\NVDA.exe --debug-logging
 
+function Wait-For-HTTP-Response {
+  param (
+    $RequestURL
+  )
+
+  $status = "Failed"
+  for (($sleeps=1); $sleeps -le 30; $sleeps++)
+  {
+    try {
+      Invoke-WebRequest -UseBasicParsing -Uri $RequestURL >> $loglocation\http-testing.log
+      $status = "Success"
+      break
+    }
+    catch {
+      $code = $_.Exception.Response.StatusCode.Value__
+      if ( $code -gt 99)
+      {
+        $status = "Success ($code)"
+        break
+      }
+    }
+    Start-Sleep -Seconds 1
+  }
+  Write-Output "$status after $sleeps tries"
+}
+
 # Spooky things... If we don't first probe the service like this, the startup of at-driver seems to fail later
 Write-Output "Waiting for localhost:8765 to start from NVDA"
-$status = "Failed"
-for (($sleeps=1); $sleeps -le 30; $sleeps++)
-{
-  try {
-    Invoke-WebRequest -UseBasicParsing -Uri http://localhost:8765/info > $loglocation\localhost-test-8765.log
-    $status = "Success"
-    break
-  }
-  catch {
-  }
-  Start-Sleep -Seconds 1
-}
-Write-Output "$status after $sleeps tries"
+Wait-For-HTTP-Response -RequestURL http://localhost:8765/info
 
 Write-Output "Starting at-driver"
 $atprocess = Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd\nvda-at-automation\Server'")) -ScriptBlock { & .\main.exe 2>&1 >$using:loglocation\at-driver.log }
-Start-Sleep -Seconds 10
+Write-Output "Waiting for localhost:3031 to start from at-driver"
+Wait-For-HTTP-Response -RequestURL http://localhost:3031
 
 Write-Output "Starting chromedriver"
 $chromeprocess = Start-Job -Init ([ScriptBlock]::Create("Set-Location '$pwd'")) -ScriptBlock { chromedriver --port=4444 --log-level=INFO *>&1 >$using:loglocation\chromedriver.log }
-Start-Sleep -Seconds 10
+Write-Output "Waiting for localhost:4444 to start from chromedriver"
+Wait-For-HTTP-Response -RequestURL http://localhost:4444/
 
 function Trace-Logs {
   Write-Output "At-Driver job process log:"
