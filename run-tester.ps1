@@ -1,11 +1,10 @@
 
-[string]$nvdaVersion = "2023.2.0.20951"
+[string]$nvdaVersion = "2023.2.0.29051"
 $loglocation = $pwd
 
 Write-Output "Log folder $loglocation"
 
-# The zip file contains the folder 2023.2.0.29051 - unzip it in the "parent directory"
-Expand-Archive -Path nvda-portable\$nvdaVersion.zip -DestinationPath nvda-portable\
+Expand-Archive -Path $loglocation\nvda-portable\$nvdaVersion.zip -DestinationPath nvda-portable\
 
 $nvdaParams = ""
 if ($env:RUNNER_DEBUG)
