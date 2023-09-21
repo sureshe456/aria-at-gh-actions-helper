@@ -110,6 +110,9 @@ jobs:
       - name: Run harness
         shell: powershell
         continue-on-error: true
+        env:
+          BROWSER_VERSION: Chrome ${{ steps.setup-chrome.outputs.chrome-version }}
+          RESULT_POST_URL: https://www.toptal.com/developers/postbin/1695322646799-1543640585150
         run: |
           & .\run-tester.ps1
 

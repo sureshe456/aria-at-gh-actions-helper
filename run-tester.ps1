@@ -1,9 +1,11 @@
 
+$nvdaVersion = "2023.2.0.20951"
 $loglocation = $pwd
+
 Write-Output "Log folder $loglocation"
 
 # The zip file contains the folder 2023.2.0.29051 - unzip it in the "parent directory"
-Expand-Archive -Path nvda-portable\2023.2.0.29051.zip -DestinationPath nvda-portable\
+Expand-Archive -Path nvda-portable\$nvdaVersion.zip -DestinationPath nvda-portable\
 
 $nvdaParams = ""
 if ($env:RUNNER_DEBUG)
@@ -11,7 +13,7 @@ if ($env:RUNNER_DEBUG)
   $nvdaParams = "--debug-logging"
 }
 Write-Output "Starting NVDA"
-nvda-portable\2023.2.0.29051\NVDA.exe $nvdaParams
+nvda-portable\$nvdaVersion\NVDA.exe $nvdaParams
 
 # Retries to connect to an http url, allowing for any valid "response" (4xx,5xx,etc also valid)
 function Wait-For-HTTP-Response {
@@ -94,7 +96,14 @@ if ($env:RUNNER_DEBUG)
 {
   $hostParams = "--debug"
 }
-node bin/host.js  run-plan --plan-workingdir ../aria-at/build/tests/alert "reference/**,test-*-nvda.*" $hostParams --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031/command --reference-hostname=127.0.0.1 --agent-web-driver-browser=chrome | Tee-Object -FilePath $loglocation\harness-run.log
+node bin/host.js  run-plan --plan-workingdir ../aria-at/build "**/reference/**,tests/alert/test-*-nvda.*" $hostParams --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031/command --reference-hostname=127.0.0.1 --agent-web-driver-browser=chrome | Tee-Object -FilePath $loglocation\harness-run.log
+
+$result = Get-Content -Path ./harness-run.log | ./jq-win64.exe '{ atVersion: "nvda '$nvdaVersion'", browserVersion: "'$env:BROWSER_VERSION'" } + walk(if type == "object" then del(.log) else . end)'
+
+Write-Output "Final Result: $result"
+
+Invoke-WebRequest -Uri $env:RESULT_POST_URL -Method Post -ContentType "application/json" -Body $result
+
 
 $graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("$loglocation\test2.png")
