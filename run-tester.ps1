@@ -1,5 +1,5 @@
 
-$nvdaVersion = "2023.2.0.20951"
+[string]$nvdaVersion = "2023.2.0.20951"
 $loglocation = $pwd
 
 Write-Output "Log folder $loglocation"
@@ -98,7 +98,10 @@ if ($env:RUNNER_DEBUG)
 }
 node bin/host.js  run-plan --plan-workingdir ../aria-at/build "**/reference/**,tests/alert/test-*-nvda.*" $hostParams --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031/command --reference-hostname=127.0.0.1 --agent-web-driver-browser=chrome | Tee-Object -FilePath $loglocation\harness-run.log
 
-$result = Get-Content -Path ./harness-run.log | ./jq-win64.exe '{ atVersion: "nvda '$nvdaVersion'", browserVersion: "'$env:BROWSER_VERSION'" } + walk(if type == "object" then del(.log) else . end)'
+#using string.format to plug the values in to the json here, means we need to double up the { } that aren't being used for format
+$script = '{{ atVersion: "nvda {0}", browserVersion: "{1}" }} + walk(if type == "object" then del(.log) else . end)' -f [string]$nvdaVersion, [string]$env:BROWSER_VERSION
+Write-Output $script | Out-File -encoding ASCII jqscript
+$result = Get-Content -Path ./harness-run.log | ./jq-win64.exe -f jqscript
 
 Write-Output "Final Result: $result"
 
