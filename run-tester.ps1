@@ -8,6 +8,7 @@ Expand-Archive -Path nvda-portable\2023.2.0.29051.zip -DestinationPath nvda-port
 Write-Output "Starting NVDA"
 nvda-portable\2023.2.0.29051\NVDA.exe --debug-logging
 
+# Retries to connect to an http url, allowing for any valid "response" (4xx,5xx,etc also valid)
 function Wait-For-HTTP-Response {
   param (
     $RequestURL
