@@ -14,7 +14,7 @@ $status = "Failed"
 for (($sleeps=1); $sleeps -le 30; $sleeps++)
 {
   try {
-    Invoke-WebRequest -UseBasicParsing -Uri http://localhost:8765/info > Tee-Object $loglocation\localhost-test-8765.log
+    Invoke-WebRequest -UseBasicParsing -Uri http://localhost:8765/info > $loglocation\localhost-test-8765.log
     $status = "Success"
     break
   }
@@ -41,7 +41,7 @@ function Trace-Logs {
   Receive-Job $chromeprocess
   Write-Output "--chromedriver.log"
   Get-Content -Path $loglocation\chromedriver.log -ErrorAction Continue
-  Write-Output "--nvda.log???"
+  Write-Output "--nvda.log"
   Get-Content -Path $env:TEMP\nvda.log -ErrorAction Continue
 }
 
