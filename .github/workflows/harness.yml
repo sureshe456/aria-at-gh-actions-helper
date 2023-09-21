@@ -100,9 +100,8 @@ jobs:
       - name: Checkout aria-at-automation-harness
         uses: actions/checkout@v3
         with:
-          repository: 'bocoup/aria-at-automation-harness'
+          repository: 'w3c/aria-at-automation-harness'
           path: 'aria-at-automation-harness'
-          ref: pac-nvda
       - name: 'automation-harness: npm install'
         shell: powershell
         run: |
