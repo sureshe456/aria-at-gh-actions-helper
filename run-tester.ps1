@@ -12,7 +12,7 @@ if ($env:RUNNER_DEBUG)
   $nvdaParams = "--debug-logging"
 }
 Write-Output "Starting NVDA"
-nvda-portable\$nvdaVersion\NVDA.exe $nvdaParams
+& "nvda-portable\$nvdaVersion\NVDA.exe" $nvdaParams
 
 # Retries to connect to an http url, allowing for any valid "response" (4xx,5xx,etc also valid)
 function Wait-For-HTTP-Response {
