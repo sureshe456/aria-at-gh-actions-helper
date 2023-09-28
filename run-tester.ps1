@@ -95,16 +95,6 @@ if ($env:RUNNER_DEBUG)
 }
 node aria-at-automation-harness/bin/host.js  run-plan --plan-workingdir aria-at/build/tests/alert "reference/**,test-*-nvda.*" $hostParams --agent-web-driver-url=http://127.0.0.1:4444 --agent-at-driver-url=ws://127.0.0.1:3031/command --reference-hostname=127.0.0.1 --agent-web-driver-browser=chrome | Tee-Object -FilePath $loglocation\harness-run.log
 
-#using string.format to plug the values in to the json here, means we need to double up the { } that aren't being used for format
-$script = '{{ atVersion: "nvda {0}", browserVersion: "{1}" }} + walk(if type == "object" then del(.log) else . end)' -f [string]$nvdaVersion, [string]$env:BROWSER_VERSION
-Write-Output $script | Out-File -encoding ASCII jqscript
-$result = Get-Content -Path $loglocation\harness-run.log | & ./jq-win64.exe -f jqscript
-
-Write-Output "Final Result: $result"
-
-Invoke-WebRequest -Uri $env:RESULT_POST_URL -Method Post -ContentType "application/json" -Body $result
-
-
 $graphics.CopyFromScreen($bounds.Location, [Drawing.Point]::Empty, $bounds.size)
 $bmp.Save("$loglocation\test2.png")
 
