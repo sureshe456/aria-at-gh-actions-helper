@@ -112,9 +112,8 @@ jobs:
         shell: powershell
         continue-on-error: true
         env:
-          BROWSER_VERSION: Chrome ${{ steps.setup-chrome.outputs.chrome-version }}
-          ARIA_APP_CALLBACK_URL: https://eorkylzwxzzltt.m.pipedream.net
-          ARIA_APP_CALLBACK_HEADER: "secret:42"
+          ARIA_AT_CALLBACK_URL: https://eorkylzwxzzltt.m.pipedream.net
+          ARIA_AT_CALLBACK_HEADER: "secret:42"
         run: |
           & .\run-tester.ps1
 
