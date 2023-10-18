@@ -53,18 +53,21 @@ jobs:
   nvda-chrome:
     runs-on: windows-2022
     steps:
-      - name: Log job state WORKER_STARTED
-        shell: powershell
-        env:
-          ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
-          ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
-          NONCE: ${{ inputs.nonce }}
-        if: inputs.nonce
-        run: |
-          $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
-          $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
-          $body = @{'status'='WORKER_STARTED'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
-          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
+
+      # Commenting out these logging states because it's not supported, but this could be a useful example later
+
+      # - name: Log job state WORKER_STARTED
+      #   shell: powershell
+      #   env:
+      #     ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
+      #     ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
+      #     NONCE: ${{ inputs.nonce }}
+      #   if: inputs.nonce
+      #   run: |
+      #     $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
+      #     $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
+      #     $body = @{'status'='WORKER_STARTED'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
+      #     Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
       - uses: actions/checkout@v3
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
@@ -143,18 +146,18 @@ jobs:
           cd aria-at-automation-harness
           npm install
 
-      - name: Log job state HARNESS_STARTING
-        shell: powershell
-        env:
-          ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
-          ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
-          NONCE: ${{ inputs.nonce }}
-        if: inputs.nonce
-        run: |
-          $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
-          $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
-          $body = @{'status'='HARNESS_STARTING'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
-          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
+      # - name: Log job state HARNESS_STARTING
+      #   shell: powershell
+      #   env:
+      #     ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
+      #     ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
+      #     NONCE: ${{ inputs.nonce }}
+      #   if: inputs.nonce
+      #   run: |
+      #     $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
+      #     $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
+      #     $body = @{'status'='HARNESS_STARTING'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
+      #     Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
 
       - name: Run harness
         shell: powershell
@@ -167,18 +170,18 @@ jobs:
         run: |
           & .\run-tester.ps1
 
-      - name: Log job state COMPLETE
-        shell: powershell
-        env:
-          ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
-          ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
-          NONCE: ${{ inputs.nonce }}
-        if: inputs.nonce
-        run: |
-          $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
-          $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
-          $body = @{'status'='COMPLETE'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
-          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
+      # - name: Log job state COMPLETE
+      #   shell: powershell
+      #   env:
+      #     ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
+      #     ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
+      #     NONCE: ${{ inputs.nonce }}
+      #   if: inputs.nonce
+      #   run: |
+      #     $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
+      #     $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
+      #     $body = @{'status'='COMPLETE'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
+      #     Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
 
 
       - name: upload screenshot
