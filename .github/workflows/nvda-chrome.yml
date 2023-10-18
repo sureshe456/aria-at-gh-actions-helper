@@ -32,17 +32,11 @@ on:
 jobs:
   self-identify:
     runs-on: windows-2022
+    if: inputs.nonce
     steps:
       - run: echo ${{inputs.nonce}}
   nvda-chrome:
-    runs-on: ${{matrix.os}}
-    strategy:
-      matrix:
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        node-version:
-          - 16.x
-        os: [windows-2022]
-
+    runs-on: windows-2022
     steps:
       - name: Log job info
         shell: powershell
@@ -56,10 +50,10 @@ jobs:
           $headers = @{$headerbits[0]=$headerbits[1], "Content-Type" = "application/json"}
           Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body "{'status': 'starting', 'nonce': '$env:NONCE', 'github': '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID'}"
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 16.x
           cache: 'npm'
       - uses: browser-actions/setup-chrome@v1
         with:
