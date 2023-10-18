@@ -63,7 +63,7 @@ jobs:
         run: |
           $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
           $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
-          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body "{'status': 'starting', 'nonce': '$env:NONCE', 'github': '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID'}"
+          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body "{'status': 'starting', 'nonce': '$env:NONCE', 'github': '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID'}"
       - uses: actions/checkout@v3
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
@@ -161,7 +161,7 @@ jobs:
         run: |
           $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
           $headers = @{$headerbits[0]=$headerbits[1]; 'Content-Type' = "application/json"}
-          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body "{'status': 'complete', 'github': '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID'}"
+          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body "{'status': 'complete', 'github': '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID'}"
 
       - name: upload screenshot
         uses: actions/upload-artifact@v3
