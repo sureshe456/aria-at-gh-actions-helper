@@ -24,6 +24,9 @@ on:
           with status updates.
         required: false
         type: string
+  push:
+    branches:
+    - nvda-chrome
 
 
 jobs:
@@ -31,7 +34,7 @@ jobs:
     runs-on: windows-2022
     steps:
       - run: echo ${{inputs.nonce}}
-  at-response-collection:
+  nvda-chrome:
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
@@ -46,10 +49,12 @@ jobs:
         env:
           ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
           ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
+          NONCE: ${{ inputs.nonce }}
+        if: inputs.nonce
         run: |
           $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
           $headers = @{$headerbits[0]=$headerbits[1], "Content-Type" = "application/json"}
-          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body "{'status': 'starting', 'github': '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID'}"
+          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body "{'status': 'starting', 'nonce': '$env:NONCE', 'github': '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID'}"
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -137,9 +142,11 @@ jobs:
           & .\run-tester.ps1
       - name: Log job info
         shell: powershell
+        if: inputs.nonce
         env:
           ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
           ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
+          NONCE: ${{ inputs.nonce }}
         run: |
           $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
           $headers = @{$headerbits[0]=$headerbits[1], "Content-Type" = "application/json"}
