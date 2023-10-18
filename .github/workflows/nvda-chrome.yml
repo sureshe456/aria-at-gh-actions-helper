@@ -12,6 +12,19 @@ on:
           GitHub API (it does not respond with the Workflow's ID)
         required: true
         type: string
+      test_pattern:
+        description: |
+          The test pattern passed to the aria-at-automation harness.
+          Uses a default of "reference/**,test-*-nvda.*" if not provided
+        required: false
+        type: string
+      work_dir:
+        description: |
+          The --plan-workingdir passed to the aria-at-automation harness.
+          Based from the aria-at repo build folder.
+          Uses a default of tests/alert if not provided.
+        required: false
+        type: string
       callback_url:
         description: |
           The harness will send POST requests to this url using callback_header
@@ -132,6 +145,8 @@ jobs:
         shell: powershell
         continue-on-error: true
         env:
+          ARIA_AT_WORK_DIR: ${{ inputs.work_dir || 'tests/alert' }}
+          ARIA_AT_TEST_PATTERN: ${{ inputs.test_pattern || 'reference/**,test-*-nvda.*'}}
           ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
           ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
         run: |
