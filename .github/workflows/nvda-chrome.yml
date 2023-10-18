@@ -2,7 +2,6 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
 name: nvda-chrome
-
 on:
   workflow_dispatch:
     inputs:
@@ -43,6 +42,12 @@ on:
   #   branches:
   #   - nvda-chrome
 
+env:
+  ARIA_AT_WORK_DIR: ${{ inputs.work_dir || 'tests/alert' }}
+  ARIA_AT_TEST_PATTERN: ${{ inputs.test_pattern || 'reference/**,test-*-nvda.*'}}
+  ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
+  ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header || 'x-header-param:empty' }}
+  NONCE: ${{inputs.nonce || 'default'}}
 
 jobs:
   self-identify:
@@ -58,10 +63,6 @@ jobs:
 
       # - name: Log job state WORKER_STARTED
       #   shell: powershell
-      #   env:
-      #     ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
-      #     ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
-      #     NONCE: ${{ inputs.nonce }}
       #   if: inputs.nonce
       #   run: |
       #     $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
@@ -126,6 +127,7 @@ jobs:
         with:
           repository: 'w3c/aria-at'
           path: 'aria-at'
+
       - name: 'aria-at: npm install & build'
         shell: powershell
         run: |
@@ -140,6 +142,7 @@ jobs:
           repository: 'bocoup/aria-at-automation-harness'
           ref: 'callback-url'
           path: 'aria-at-automation-harness'
+
       - name: 'automation-harness: npm install'
         shell: powershell
         run: |
@@ -148,10 +151,6 @@ jobs:
 
       # - name: Log job state HARNESS_STARTING
       #   shell: powershell
-      #   env:
-      #     ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
-      #     ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
-      #     NONCE: ${{ inputs.nonce }}
       #   if: inputs.nonce
       #   run: |
       #     $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
@@ -162,20 +161,11 @@ jobs:
       - name: Run harness
         shell: powershell
         continue-on-error: true
-        env:
-          ARIA_AT_WORK_DIR: ${{ inputs.work_dir || 'tests/alert' }}
-          ARIA_AT_TEST_PATTERN: ${{ inputs.test_pattern || 'reference/**,test-*-nvda.*'}}
-          ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
-          ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
         run: |
           & .\run-tester.ps1
 
       # - name: Log job state COMPLETE
       #   shell: powershell
-      #   env:
-      #     ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
-      #     ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
-      #     NONCE: ${{ inputs.nonce }}
       #   if: inputs.nonce
       #   run: |
       #     $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
@@ -184,10 +174,10 @@ jobs:
       #     Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
 
 
-      - name: upload screenshot
+      - name: upload *.{log,png}
         uses: actions/upload-artifact@v3
         with:
-          name: test-screenshot
+          name: logs
           path: |
             D:\a\aria-at-gh-actions-helper\aria-at-gh-actions-helper\*.log
             D:\a\aria-at-gh-actions-helper\aria-at-gh-actions-helper\*.png
