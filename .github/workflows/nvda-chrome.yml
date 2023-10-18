@@ -24,9 +24,11 @@ on:
           with status updates.
         required: false
         type: string
-  push:
-    branches:
-    - nvda-chrome
+
+  # seems if push is enabled, I'm not able to trigger via workflow_dispatch?
+  # push:
+  #   branches:
+  #   - nvda-chrome
 
 
 jobs:
