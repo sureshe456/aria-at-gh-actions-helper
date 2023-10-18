@@ -1,28 +1,38 @@
 # This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Run Automation Harness
+name: Automation Harness - NVDA/Chrome
 
 on:
-  push:
-    branches: [main,gnarf-wip]
-    paths:
-      - '**.js'
-      - '**.yml'
-      - '**.json'
-      - '**.ps1'
-      - '**.ini'
-  pull_request:
-    branches: [main]
-    paths:
-      - '**.js'
-      - '**.yml'
-      - '**.json'
+  workflow_dispatch:
+    inputs:
+      nonce:
+        description: |
+          Allow requesters to recognize the Workflow they trigger via the
+          GitHub API (it does not respond with the Workflow's ID)
+        required: true
+        type: string
+      callback_url:
+        description: |
+          The harness will send POST requests to this url using callback_header
+          header with status updates on its progress.
+        required: false
+        type: string
+      callback_header:
+        description: |
+          The harness will send POST requests to callback_url using this header
+          with status updates.
+        required: false
+        type: string
+
 
 jobs:
-  build:
+  self-identify:
+    runs-on: windows-2022
+    steps:
+      - run: echo ${{inputs.nonce}}
+  at-response-collection:
     runs-on: ${{matrix.os}}
-
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
@@ -31,6 +41,15 @@ jobs:
         os: [windows-2022]
 
     steps:
+      - name: Log job info
+        shell: powershell
+        env:
+          ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
+          ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
+        run: |
+          $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
+          $headers = @{$headerbits[0]=$headerbits[1], "Content-Type" = "application/json"}
+          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body "{'status': 'starting', 'github': '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID'}"
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -112,10 +131,19 @@ jobs:
         shell: powershell
         continue-on-error: true
         env:
-          ARIA_AT_CALLBACK_URL: https://eorkylzwxzzltt.m.pipedream.net
-          ARIA_AT_CALLBACK_HEADER: "secret:42"
+          ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
+          ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
         run: |
           & .\run-tester.ps1
+      - name: Log job info
+        shell: powershell
+        env:
+          ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
+          ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header }}
+        run: |
+          $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
+          $headers = @{$headerbits[0]=$headerbits[1], "Content-Type" = "application/json"}
+          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body "{'status': 'complete', 'github': '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID'}"
 
       - name: upload screenshot
         uses: actions/upload-artifact@v3
