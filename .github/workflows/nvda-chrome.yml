@@ -171,13 +171,13 @@ jobs:
         run: |
           & .\run-tester.ps1
 
-      - name: Log job state COMPLETE
+      - name: Log job state COMPLETED
         shell: powershell
         if: inputs.nonce
         run: |
           $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
           $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
-          $body = @{'status'='COMPLETE'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
+          $body = @{'status'='COMPLETED'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
           Invoke-WebRequest $env:ARIA_AT_STATUS_URL -Headers $headers -Method 'POST' -Body $body
 
 
