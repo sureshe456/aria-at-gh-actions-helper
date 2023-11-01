@@ -25,9 +25,15 @@ on:
         required: false
         type: string
       callback_url:
+          description: |
+            The harness will send POST requests to this url using callback_header
+            header with test results.
+          required: false
+          type: string
+      status_url:
         description: |
           The harness will send POST requests to this url using callback_header
-          header with status updates on its progress.
+          header with status updates.
         required: false
         type: string
       callback_header:
@@ -46,6 +52,7 @@ env:
   ARIA_AT_WORK_DIR: ${{ inputs.work_dir || 'tests/alert' }}
   ARIA_AT_TEST_PATTERN: ${{ inputs.test_pattern || 'reference/**,test-*-nvda.*'}}
   ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
+  ARIA_AT_STATUS_URL: ${{ inputs.status_url }}
   ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header || 'x-header-param:empty' }}
   NONCE: ${{inputs.nonce || 'default'}}
 
@@ -149,14 +156,14 @@ jobs:
           cd aria-at-automation-harness
           npm install
 
-      # - name: Log job state HARNESS_STARTING
-      #   shell: powershell
-      #   if: inputs.nonce
-      #   run: |
-      #     $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
-      #     $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
-      #     $body = @{'status'='HARNESS_STARTING'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
-      #     Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
+      - name: Log job state RUNNING
+        shell: powershell
+        if: inputs.nonce
+        run: |
+          $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
+          $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
+          $body = @{'status'='RUNNING'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
+          Invoke-WebRequest $env:ARIA_AT_STATUS_URL -Headers $headers -Method 'POST' -Body $body
 
       - name: Run harness
         shell: powershell
@@ -164,14 +171,14 @@ jobs:
         run: |
           & .\run-tester.ps1
 
-      # - name: Log job state COMPLETE
-      #   shell: powershell
-      #   if: inputs.nonce
-      #   run: |
-      #     $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
-      #     $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
-      #     $body = @{'status'='COMPLETE'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
-      #     Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
+      - name: Log job state COMPLETE
+        shell: powershell
+        if: inputs.nonce
+        run: |
+          $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
+          $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
+          $body = @{'status'='COMPLETE'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
+          Invoke-WebRequest $env:ARIA_AT_STATUS_URL -Headers $headers -Method 'POST' -Body $body
 
 
       - name: upload *.{log,png}
