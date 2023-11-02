@@ -66,16 +66,15 @@ jobs:
     runs-on: windows-2022
     steps:
 
-      # Commenting out these logging states because it's not supported, but this could be a useful example later
 
-      # - name: Log job state WORKER_STARTED
-      #   shell: powershell
-      #   if: inputs.nonce
-      #   run: |
-      #     $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
-      #     $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
-      #     $body = @{'status'='WORKER_STARTED'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
-      #     Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
+      - name: Log job state QUEUED
+        shell: powershell
+        if: inputs.nonce
+        run: |
+          $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
+          $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
+          $body = @{'status'='QUEUED'; 'nonce'=$env:NONCE; 'externalLogsUrl'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
+          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
       - uses: actions/checkout@v3
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
@@ -162,7 +161,7 @@ jobs:
         run: |
           $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
           $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
-          $body = @{'status'='RUNNING'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"; 'work_dir'="$env:ARIA_AT_WORK_DIR"} | ConvertTo-JSON
+          $body = @{'status'='RUNNING'; 'nonce'=$env:NONCE; 'externalLogsUrl'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"; 'work_dir'="$env:ARIA_AT_WORK_DIR"} | ConvertTo-JSON
           Invoke-WebRequest $env:ARIA_AT_STATUS_URL -Headers $headers -Method 'POST' -Body $body
 
       - name: Run harness
@@ -177,7 +176,7 @@ jobs:
         run: |
           $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
           $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
-          $body = @{'status'='COMPLETED'; 'nonce'=$env:NONCE; 'github'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
+          $body = @{'status'='COMPLETED'; 'nonce'=$env:NONCE; 'externalLogsUrl'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
           Invoke-WebRequest $env:ARIA_AT_STATUS_URL -Headers $headers -Method 'POST' -Body $body
 
 
