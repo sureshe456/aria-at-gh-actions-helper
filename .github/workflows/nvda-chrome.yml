@@ -65,8 +65,8 @@ jobs:
   nvda-chrome:
     runs-on: windows-2022
     steps:
-
-
+      - name: setup masks
+        run: echo "::add-mask::$ARIA_AT_CALLBACK_HEADER"
       - name: Log job state QUEUED
         shell: powershell
         if: inputs.nonce
