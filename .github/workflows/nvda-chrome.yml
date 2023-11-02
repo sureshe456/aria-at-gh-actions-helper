@@ -74,7 +74,7 @@ jobs:
           $headerbits = $env:ARIA_AT_CALLBACK_HEADER -split ":\s*", 2
           $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
           $body = @{'status'='QUEUED'; 'nonce'=$env:NONCE; 'externalLogsUrl'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
-          Invoke-WebRequest $env:ARIA_AT_CALLBACK_URL -Headers $headers -Method 'POST' -Body $body
+          Invoke-WebRequest $env:ARIA_AT_STATUS_URL -Headers $headers -Method 'POST' -Body $body
       - uses: actions/checkout@v3
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
