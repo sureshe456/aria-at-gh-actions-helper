@@ -66,7 +66,8 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: setup masks
-        run: echo "::add-mask::$ARIA_AT_CALLBACK_HEADER"
+        shell: powershell
+        run: echo "::add-mask::$env:ARIA_AT_CALLBACK_HEADER"
       - name: Log job state QUEUED
         shell: powershell
         if: inputs.nonce
