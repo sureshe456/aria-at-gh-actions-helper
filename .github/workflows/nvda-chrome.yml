@@ -11,6 +11,11 @@ on:
           GitHub API (it does not respond with the Workflow's ID)
         required: true
         type: string
+      aria_at_ref:
+        description: |
+          The sha / ref to checkout for aria-at tests
+        required: false
+        type: string
       test_pattern:
         description: |
           The test pattern passed to the aria-at-automation harness.
@@ -134,6 +139,7 @@ jobs:
         with:
           repository: 'w3c/aria-at'
           path: 'aria-at'
+          ref: ${{ inputs.aria_at_ref || 'master' }}
 
       - name: 'aria-at: npm install & build'
         shell: powershell
