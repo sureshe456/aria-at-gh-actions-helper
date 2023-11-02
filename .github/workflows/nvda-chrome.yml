@@ -134,7 +134,7 @@ jobs:
           cd nvda-at-automation\Server
           go build main\main.go
 
-      - name: Checkout aria-at
+      - name: Checkout aria-at ref ${{ inputs.aria_at_ref || 'master' }}
         uses: actions/checkout@v3
         with:
           repository: 'w3c/aria-at'
