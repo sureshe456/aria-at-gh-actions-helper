@@ -152,8 +152,8 @@ jobs:
       - name: Checkout aria-at-automation-harness
         uses: actions/checkout@v3
         with:
-          repository: 'bocoup/aria-at-automation-harness'
-          ref: 'better-force-focus-window'
+          repository: 'w3c/aria-at-automation-harness'
+          ref: 'main'
           path: 'aria-at-automation-harness'
 
       - name: 'automation-harness: npm install'
