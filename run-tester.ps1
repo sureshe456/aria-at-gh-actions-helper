@@ -1,5 +1,5 @@
 
-[string]$nvdaVersion = "2023.2.0.29051"
+[string]$nvdaVersion = "2023.3"
 $loglocation = $pwd
 
 Write-Output "Log folder $loglocation"
