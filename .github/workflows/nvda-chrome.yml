@@ -24,11 +24,11 @@ on:
         required: false
         type: string
       callback_url:
-          description: |
-            The harness will send POST requests to this url using callback_header
-            header with test results.
-          required: false
-          type: string
+        description: |
+          The harness will send POST requests to this url using callback_header
+          header with test results.
+        required: false
+        type: string
       status_url:
         description: |
           The harness will send POST requests to this url using callback_header
@@ -74,28 +74,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: 'npm'
+          cache: "npm"
       - uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
         id: setup-chrome
       - run: |
           echo "Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }} ${{ steps.setup-chrome.outputs.chrome-path }}"
-      # Installing Scream as a virtual audio driver to avoid this exception installing the sapi
-      #
-      #
-      # npm ERR!   cmd: '"C:\\\\Program Files\\\\Bocoup Automation Voice\\\\Vocalizer.exe"',
-      # npm ERR! Unhandled Exception: System.Speech.Internal.Synthesis.AudioException: Audio device error encountered. - Error Code: 0x2
-      # npm ERR!    at System.Speech.Internal.Synthesis.VoiceSynthesis.Speak(Prompt prompt)
-      # npm ERR!    at System.Speech.Synthesis.SpeechSynthesizer.Speak(Prompt prompt)
-      # npm ERR!    at main(String[] args)
-      # npm ERR!    at mainCRTStartupStrArray(String[] arguments)
-      - name: Install Scream
+      # Installing Scream as a virtual audio driver to avoid exceptions later
+      - name: Install Scream (Virtual Audio Driver)
         shell: powershell
         run: |
           Start-Service audio*
           Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.6/Scream3.6.zip -OutFile C:\Scream3.6.zip
-          Extract-7Zip -Path C:\Scream3.6.zip -DestinationPath C:\Scream
+          Expand-Archive -Path C:\Scream3.6.zip -DestinationPath C:\Scream
           $cert = (Get-AuthenticodeSignature C:\Scream\Install\driver\Scream.sys).SignerCertificate
           $store = [System.Security.Cryptography.X509Certificates.X509Store]::new("TrustedPublisher", "LocalMachine")
           $store.Open("ReadWrite")
@@ -103,14 +95,12 @@ jobs:
           $store.Close()
           cd C:\Scream\Install\driver
           C:\Scream\Install\helpers\devcon install Scream.inf *Scream
-      # - run: npm install -g @bocoup/windows-sapi-tts-engine-for-automation
-      # - run: dir "C:\Program Files\Bocoup Automation Voice"
 
       - name: Checkout nvda-at-automation driver
         uses: actions/checkout@v3
         with:
-          repository: 'Prime-Access-Consulting/nvda-at-automation'
-          path: 'nvda-at-automation'
+          repository: "Prime-Access-Consulting/nvda-at-automation"
+          path: "nvda-at-automation"
 
       - uses: actions/setup-go@v4
         with:
@@ -125,26 +115,25 @@ jobs:
       - name: Checkout aria-at ref ${{ inputs.aria_at_ref || 'master' }}
         uses: actions/checkout@v3
         with:
-          repository: 'w3c/aria-at'
-          path: 'aria-at'
+          repository: "w3c/aria-at"
+          path: "aria-at"
           ref: ${{ inputs.aria_at_ref || 'master' }}
 
-      - name: 'aria-at: npm install & build'
+      - name: "aria-at: npm install & build"
         shell: powershell
         run: |
           cd aria-at
           npm install
           npm run build
 
-
       - name: Checkout aria-at-automation-harness
         uses: actions/checkout@v3
         with:
-          repository: 'w3c/aria-at-automation-harness'
-          ref: 'main'
-          path: 'aria-at-automation-harness'
+          repository: "w3c/aria-at-automation-harness"
+          ref: "main"
+          path: "aria-at-automation-harness"
 
-      - name: 'automation-harness: npm install'
+      - name: "automation-harness: npm install"
         shell: powershell
         run: |
           cd aria-at-automation-harness
@@ -174,7 +163,6 @@ jobs:
           $body = @{'status'='COMPLETED'; 'externalLogsUrl'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
           Invoke-WebRequest $env:ARIA_AT_STATUS_URL -Headers $headers -Method 'POST' -Body $body
 
-
       - name: upload *.{log,png}
         uses: actions/upload-artifact@v3
         with:
@@ -182,4 +170,3 @@ jobs:
           path: |
             D:\a\aria-at-gh-actions-helper\aria-at-gh-actions-helper\*.log
             D:\a\aria-at-gh-actions-helper\aria-at-gh-actions-helper\*.png
-
