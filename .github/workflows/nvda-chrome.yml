@@ -69,12 +69,36 @@ jobs:
           $headers = @{$headerbits[0]=$headerbits[1]; "Content-Type" = "application/json"}
           $body = @{'status'='QUEUED'; 'externalLogsUrl'="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"} | ConvertTo-JSON
           Invoke-WebRequest $env:ARIA_AT_STATUS_URL -Headers $headers -Method 'POST' -Body $body
+
+      # Checkout all repos first (helps cache purposes)
       - uses: actions/checkout@v3
+
+      - name: Checkout nvda-at-automation driver
+        uses: actions/checkout@v3
+        with:
+          repository: "Prime-Access-Consulting/nvda-at-automation"
+          path: "nvda-at-automation"
+
+      - name: Checkout aria-at ref ${{ inputs.aria_at_ref || 'master' }}
+        uses: actions/checkout@v3
+        with:
+          repository: "w3c/aria-at"
+          path: "aria-at"
+          ref: ${{ inputs.aria_at_ref || 'master' }}
+
+      - name: Checkout aria-at-automation-harness
+        uses: actions/checkout@v3
+        with:
+          repository: "w3c/aria-at-automation-harness"
+          ref: "main"
+          path: "aria-at-automation-harness"
+
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
           cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
       - uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
@@ -96,12 +120,6 @@ jobs:
           cd C:\Scream\Install\driver
           C:\Scream\Install\helpers\devcon install Scream.inf *Scream
 
-      - name: Checkout nvda-at-automation driver
-        uses: actions/checkout@v3
-        with:
-          repository: "Prime-Access-Consulting/nvda-at-automation"
-          path: "nvda-at-automation"
-
       - uses: actions/setup-go@v4
         with:
           cache-dependency-path: nvda-at-automation/Server/go.sum
@@ -111,13 +129,6 @@ jobs:
         run: |
           cd nvda-at-automation\Server
           go build main\main.go
-
-      - name: Checkout aria-at ref ${{ inputs.aria_at_ref || 'master' }}
-        uses: actions/checkout@v3
-        with:
-          repository: "w3c/aria-at"
-          path: "aria-at"
-          ref: ${{ inputs.aria_at_ref || 'master' }}
 
       - name: "aria-at: npm install"
         shell: powershell
@@ -130,13 +141,6 @@ jobs:
         run: |
           cd aria-at
           npm run build
-
-      - name: Checkout aria-at-automation-harness
-        uses: actions/checkout@v3
-        with:
-          repository: "w3c/aria-at-automation-harness"
-          ref: "main"
-          path: "aria-at-automation-harness"
 
       - name: "automation-harness: npm install"
         shell: powershell
