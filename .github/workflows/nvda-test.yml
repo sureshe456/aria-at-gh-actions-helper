@@ -176,6 +176,7 @@ jobs:
 
       - name: Run harness
         shell: powershell
+        timeout-minutes: 30
         env:
           NVDA_PORTABLE_ZIP: ${{ fromJson(steps.nvda-portable-download.outputs.downloaded_files)[0] }}
         run: |
