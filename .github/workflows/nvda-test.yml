@@ -110,6 +110,7 @@ jobs:
           tarBall: false
           zipBall: false
           tag: ${{ inputs.nvda_version }}
+          latest: ${{ inputs.nvda_version == '' }}
           out-file-path: "nvda-portable"
           extract: false
 
