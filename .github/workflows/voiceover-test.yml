@@ -151,6 +151,13 @@ jobs:
         if: steps.check_macos.outputs.should_run == 'true'
         run: defaults write -app Safari AllowJavaScriptFromAppleEvents 1
 
+        # Ensure that VoiceOver doesn't automatically read through the entirety of
+        # a webpage when its loaded and there isn't immediate keyboard interaction.
+        # This is turned on by default for some versions of MacOS
+        # https://support.apple.com/guide/voiceover/general-cpvouwebpageloading/mac
+      - name: Configure VoiceOver not to "Automatically Speak Web Page"
+        run: defaults write com.apple.VoiceOver4/default SCRCUserDefaultsAutomaticallySpeakWebPage 0
+
       - name: Log job state RUNNING
         if: inputs.status_url && steps.check_macos.outputs.should_run == 'true'
         run: './report-status.sh RUNNING "\"work_dir\": \"${ARIA_AT_WORK_DIR}\","'
