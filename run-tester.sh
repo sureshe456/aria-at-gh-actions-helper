@@ -38,7 +38,7 @@ poll_url() {
       echo "Success: ${response} after ${attempt} tries"
       return 0
     else
-      echo "Attempt ${attempt}: URL ${url} returned HTTP ${response}. Retrying in 1 second..."
+      echo "Attempt ${attempt}: URL ${url} returned HTTP ${response}. Retrying in 1 second..." >&2
       sleep 1
     fi
   done
