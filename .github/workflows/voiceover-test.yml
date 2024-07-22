@@ -40,12 +40,18 @@ on:
           - "13"
           - "14"
         default: "14"
+      browser:
+        description: |
+          The browser to use for testing, "chrome" or "firefox" or "safari", default "safari"
+        required: false
+        type: string
 
 env:
   ARIA_AT_WORK_DIR: ${{ inputs.work_dir || 'tests/alert' }}
   ARIA_AT_CALLBACK_URL: ${{ inputs.callback_url }}
   ARIA_AT_STATUS_URL: ${{ inputs.status_url }}
   ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header || 'x-header-param:empty' }}
+  BROWSER: ${{ inputs.browser || 'safari' }}
 
 jobs:
   voiceover-test:
@@ -71,6 +77,20 @@ jobs:
           node-version: 18.x
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
+
+      - uses: browser-actions/setup-chrome@v1
+        if: inputs.browser == 'chrome'
+        with:
+          chrome-version: stable
+
+      - uses: browser-actions/setup-firefox@v1
+        if: inputs.browser == 'firefox'
+
+      - name: Install geckodriver
+        if: inputs.browser == 'firefox'
+        env:
+          token: ${{ secrets.GITHUB_TOKEN }}
+        run: ./install-geckodriver.sh
 
       - name: Setup Environment
         uses: guidepup/setup-action@0.15.3
