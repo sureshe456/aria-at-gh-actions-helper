@@ -10,6 +10,8 @@ variables:
     value: ""
   - name: helper_dir
     value: '$(Agent.BuildDirectory)\helper'
+  - name: callback_url
+    value: ""
 
 parameters:
   - name: aria_at_ref
@@ -39,13 +41,9 @@ parameters:
     type: string
     default: $(empty)
     displayName: Callback Header
-  - name: callback_url
-    type: string
-    default: $(empty)
-    displayName: Callback URL
   - name: status_url
     type: string
-    default: $(empty)
+    default: NONE
     displayName: Status URL
 
 resources:
@@ -80,7 +78,6 @@ steps:
     env:
       p_work_dir: ${{ parameters['work_dir'] }}
       p_test_pattern: ${{ parameters['test_pattern'] }}
-      p_callback_url: ${{ parameters['callback_url'] }}
       p_status_url: ${{ parameters['status_url'] }}
       p_callback_header: ${{ parameters['callback_header'] }}
       p_browser: ${{ parameters['browser'] }}
@@ -90,20 +87,35 @@ steps:
       script: |
         Write-Host "Making inputs available as an environment variable."
         Write-Host "##vso[task.setvariable variable=ARIA_AT_WORK_DIR;]$env:p_work_dir"
+        Write-Host "ARIA_AT_WORK_DIR: $env:ARIA_AT_WORK_DIR ($env:p_work_dir)"
         Write-Host "##vso[task.setvariable variable=ARIA_AT_TEST_PATTERN;]$env:p_test_pattern"
-        Write-Host "##vso[task.setvariable variable=ARIA_AT_CALLBACK_URL;]$env:p_callback_url"
+        Write-Host "ARIA_AT_TEST_PATTERN: $env:ARIA_AT_TEST_PATTERN ($env:p_test_pattern)"
+        Write-Host "##vso[task.setvariable variable=ARIA_AT_STATUS_URL;]${{ parameters['status_url'] }}"
+        Write-Host "ARIA_AT_STATUS_URL: $env:ARIA_AT_STATUS_URL (${{ parameters['status_url'] }})"
         Write-Host "##vso[task.setvariable variable=ARIA_AT_STATUS_URL;]$env:p_status_url"
+        Write-Host "ARIA_AT_STATUS_URL: $env:ARIA_AT_STATUS_URL ($env:p_status_url)"
         Write-Host "##vso[task.setvariable variable=ARIA_AT_CALLBACK_HEADER;]$env:p_callback_header"
+        Write-Host "ARIA_AT_CALLBACK_HEADER: $env:ARIA_AT_CALLBACK_HEADER ($env:p_callback_header)"
         Write-Host "##vso[task.setvariable variable=BROWSER;]$env:p_browser"
+        Write-Host "BROWSER: $env:BROWSER ($env:p_browser)"
         Write-Host "##vso[task.setvariable variable=NVDA_VERSION;]$env:p_nvda_version"
+        Write-Host "NVDA_VERSION: $env:NVDA_VERSION ($env:p_nvda_version)"
 
   - task: UseNode@1
     displayName: Install Node
     inputs:
       version: "20.x"
   - task: PowerShell@2
+    displayName: Debug Parameters
+    inputs:
+      targetType: inline
+      script: |
+        Write-Host "status_url parameter value: ${{ parameters['status_url'] }}"
+        Write-Host "status_url variable value: $env:status_url"
+        Write-Host "Pipeline status: $(Agent.JobStatus)"
+  - task: PowerShell@2
     displayName: Log job state QUEUED
-    condition: ${{ ne(parameters['status_url'], '$(empty)') }}
+    condition: ${{ ne(variables['status_url'], '') }}
     inputs:
       targetType: inline
       script: |
@@ -191,7 +203,7 @@ steps:
   - task: PowerShell@2
     displayName: Log job state RUNNING
     # weird syntaxing because parameters only exists in ${{ }} land, but succeeded() doesn't exist there
-    condition: and(succeeded(), ${{ ne(parameters['status_url'], '$(empty)') }} )
+    condition: and(succeeded(), ${{ ne(parameters['status_url'], 'NONE') }} )
     inputs:
       targetType: inline
       script: |
@@ -211,7 +223,7 @@ steps:
   - task: PowerShell@2
     displayName: Log job state ERROR
     # weird syntaxing because parameters only exists in ${{ }} land, but failed() doesn't exist there
-    condition: and(failed(), ${{ ne(parameters['status_url'], '$(empty)') }} )
+    condition: and(failed(), ${{ ne(parameters['status_url'], 'NONE') }} )
     inputs:
       targetType: inline
       script: |
@@ -222,7 +234,7 @@ steps:
   - task: PowerShell@2
     displayName: Log job state COMPLETED
     # weird syntaxing because parameters only exists in ${{ }} land, but succeeded() doesn't exist there
-    condition: and(succeeded(), ${{ ne(parameters['status_url'], '$(empty)') }} )
+    condition: and(succeeded(), ${{ ne(parameters['status_url'], 'NONE') }} )
     inputs:
       targetType: inline
       script: |
