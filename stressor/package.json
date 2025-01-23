@@ -4,7 +4,8 @@
   "description": "Stress test Test Plans via CI workflows",
   "main": "stress-test.mts",
   "scripts": {
-    "cancel-runs": "tsx cancel-all-workflows.mts"
+    "cancel-runs": "tsx cancel-all-workflows.mts",
+    "test-types": "tsc --noEmit"
   },
   "author": "",
   "license": "MIT",
