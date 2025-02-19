@@ -5,7 +5,9 @@
   "main": "stress-test.mts",
   "scripts": {
     "cancel-runs": "tsx cancel-all-workflows.mts",
-    "test-types": "tsc --noEmit"
+    "test-types": "tsc --noEmit",
+    "prettier": "prettier --write \"**/*.{js,jsx,css,mts}\"",
+    "prettier:check": "prettier --check \"**/*.{js,jsx,css,mts}\""
   },
   "author": "",
   "license": "MIT",
@@ -24,6 +26,7 @@
     "@octokit/types": "^13.5.0",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.14.12",
+    "prettier": "^3.5.1",
     "tslib": "^2.6.3",
     "tsx": "^4.19.2"
   },
