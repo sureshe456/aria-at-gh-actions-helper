@@ -115,8 +115,11 @@ jobs:
           path: "aria-at"
           ref: ${{ inputs.aria_at_ref || 'master' }}
 
-      - name: Install the ARIA-AT Automation Harness package
-        run: npm install aria-at-automation-harness@"~0.0.1"
+      - name: Checkout aria-at-automation-harness
+        uses: actions/checkout@v4
+        with:
+          repository: "w3c/aria-at-automation-harness"
+          path: "aria-at-automation-harness"
 
       - name: "aria-at: npm install"
         working-directory: aria-at
@@ -125,6 +128,10 @@ jobs:
       - name: "aria-at: npm run build"
         working-directory: aria-at
         run: npm run build
+
+      - name: "automation-harness: npm install"
+        working-directory: aria-at-automation-harness
+        run: npm install
 
       - name: Start VoiceOver
         run: "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter"
