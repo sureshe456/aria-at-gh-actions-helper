@@ -34,4 +34,3 @@ jobs:
       - name: prettier check
         run: npm run prettier:check
         working-directory: ./stressor
-
