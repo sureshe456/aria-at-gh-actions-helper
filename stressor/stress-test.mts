@@ -744,14 +744,14 @@ const formatResultsForMD = async (
 await formatResultsForMD(allResults);
 
 await new Promise((resolve, reject) => {
-  outputStream.on("finish", resolve);
-  outputStream.on("error", reject);
+  outputStream.on('finish', resolve);
+  outputStream.on('error', reject);
   outputStream.end();
 });
 if (fileStream) {
   await new Promise((resolve, reject) => {
-    fileStream.on("finish", resolve);
-    fileStream.on("error", reject);
+    fileStream.on('finish', resolve);
+    fileStream.on('error', reject);
     fileStream.end();
   });
 }
