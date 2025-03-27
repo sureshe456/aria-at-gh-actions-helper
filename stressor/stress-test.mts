@@ -557,7 +557,7 @@ if (options.resultsFromFile) {
   );
 }
 
-const outputStream = new PassThrough();
+const outputStream = new PassThrough({ highWaterMark: 0 });
 let fileStream;
 if (options.mdOutput === '-') {
   outputStream.pipe(process.stdout);
@@ -567,8 +567,8 @@ if (options.mdOutput === '-') {
 }
 
 const output = async (text: string) => {
-  let headRoomavailable = outputStream.write(`${text}\n`);
-  if (!headRoomavailable) {
+  let headRoomAvailable = outputStream.write(`${text}\n`);
+  if (!headRoomAvailable) {
     await new Promise(resolve => outputStream.once('drain', resolve));
   }
 };
@@ -743,15 +743,19 @@ const formatResultsForMD = async (
 
 await formatResultsForMD(allResults);
 
-if (options.mdOutput !== '-') {
-  await new Promise(resolve => {
-    outputStream.end(() => resolve(true));
+await new Promise((resolve, reject) => {
+  outputStream.on("finish", resolve);
+  outputStream.on("error", reject);
+  outputStream.end();
+});
+if (fileStream) {
+  await new Promise((resolve, reject) => {
+    fileStream.on("finish", resolve);
+    fileStream.on("error", reject);
+    fileStream.end();
   });
-  if (fileStream) {
-    await new Promise(resolve => {
-      fileStream.end(() => resolve(true));
-    });
-  }
+}
+if (options.mdOutput != '-') {
   console.log(`Wrote markdown report to ${options.mdOutput}`);
 }
 
