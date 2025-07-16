@@ -129,6 +129,22 @@ else
     Write-Host "[x] Outbound firewall rule already exists."
 }
 
+# temporary settings tweaking (eventually will be implemented in harness)
+[System.IO.Directory]::CreateDirectory("$env:APPDATA\Freedom Scientific\JAWS\2025\Settings\enu\")
+$settings = "$env:APPDATA\Freedom Scientific\JAWS\2025\Settings\enu\default.jcf"
+if (-Not (Test-Path $settings))
+{
+    New-Item $settings
+}
+Add-Content -Path $settings -Value @"
+
+[HTML]
+SayAllOnDocumentLoad=0
+[options]
+TypingEcho=0
+"@
+
+
 #start JAWS
 # /startrcs starts JAWS with Remote Command Server enabled
 # /default suppresses JAWS startup wizard
