@@ -161,6 +161,14 @@ jobs:
         if: inputs.status_url
         run: './report-status.sh RUNNING "\"work_dir\": \"${ARIA_AT_WORK_DIR}\","'
 
+     #Ensure Safari is Launched and Ready
+     #Add a Delay to Wait for Safari
+      - name: Start Safari
+        run: open -a Safari
+      
+      - name: Wait for Safari
+        run: sleep 5
+      
       - name: Run harness
         run: ./run-tester.sh
 
