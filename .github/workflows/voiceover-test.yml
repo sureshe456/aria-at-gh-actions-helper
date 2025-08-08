@@ -167,7 +167,15 @@ jobs:
         run: open -a Safari
       
       - name: Wait for Safari
-        run: sleep 5
+        run: sleep 20
+
+      - name: Confirm Safari is running
+        run: |
+          i=0
+          while ! pgrep -x "Safari" > /dev/null && [ $i -lt 10 ]; do
+            sleep 2
+            i=$((i+1))
+          done
 
       - name: Grant Automation access for Safari control
         run: |
