@@ -163,11 +163,11 @@ jobs:
 
      #Ensure Safari is Launched and Ready
      #Add a Delay to Wait for Safari
-      #- name: Start Safari
-        #run: open -a Safari
+      - name: Start Safari
+        run: open -a Safari
       
-      #- name: Wait for Safari
-        #run: sleep 5
+      - name: Wait for Safari
+        run: sleep 5
 
       - name: Grant Automation access for Safari control
         run: |
