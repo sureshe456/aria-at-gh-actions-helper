@@ -163,27 +163,27 @@ jobs:
 
      #Ensure Safari is Launched and Ready
      #Add a Delay to Wait for Safari
-      - name: Start Safari
-        run: open -a Safari
+      #- name: Start Safari
+        #run: open -a Safari
       
-      - name: Wait for Safari
-        run: sleep 20
+      #- name: Wait for Safari
+        #run: sleep 20
 
-      - name: Confirm Safari is running
-        run: |
-          i=0
-          while ! pgrep -x "Safari" > /dev/null && [ $i -lt 10 ]; do
-            sleep 2
-            i=$((i+1))
-          done
+      #- name: Confirm Safari is running
+        #run: |
+         # i=0
+          #while ! pgrep -x "Safari" > /dev/null && [ $i -lt 10 ]; do
+            #sleep 2
+            #i=$((i+1))
+          #done
 
-      - name: Grant Automation access for Safari control
-        run: |
-          sudo sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" \
-          "INSERT OR REPLACE INTO access
-          (service, client, client_type, auth_value, auth_reason, auth_version, csreq, policy_id, indirect_object_identifier_type, indirect_object_identifier, flags, last_modified)
-          VALUES('kTCCServiceAppleEvents','/usr/bin/osascript',1,2,1,1,NULL,NULL,0,'com.apple.Safari',0,strftime('%s','now'));"
-          sudo killall tccd
+      #- name: Grant Automation access for Safari control
+        #run: |
+         # sudo sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" \
+          #"INSERT OR REPLACE INTO access
+          #(service, client, client_type, auth_value, auth_reason, auth_version, csreq, policy_id, indirect_object_identifier_type, indirect_object_identifier, flags, last_modified)
+          #VALUES('kTCCServiceAppleEvents','/usr/bin/osascript',1,2,1,1,NULL,NULL,0,'com.apple.Safari',0,strftime('%s','now'));"
+          #sudo killall tccd
 
       
       - name: Run harness
