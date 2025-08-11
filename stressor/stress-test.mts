@@ -103,12 +103,16 @@ const testPlans = options.testPlan;
 // have 3 jobs left it matters... :)
 const testingMatrix = [
   {
+    workflowId: 'jaws-test.yml',
+    browsers: ['chrome', 'firefox']
+  },
+  {
     workflowId: 'nvda-test.yml',
     browsers: ['chrome', 'firefox']
   },
   {
-    workflowId: 'voiceover-test.yml',
-    browsers: ['safari', 'chrome']
+    workflowId: 'self-hosted-macos-15.yml',
+    browsers: ['safari']
   }
 ];
 
@@ -187,6 +191,9 @@ const debugLog = (...args: Parameters<typeof console.debug>): void => {
  */
 function workflowIdAsLabel(workflowId: string): string {
   switch (workflowId) {
+    case 'jaws-test.yml':
+      return 'JAWS';
+    case 'self-hosted-macos-15.yml':
     case 'voiceover-test.yml':
       return 'VoiceOver';
 
