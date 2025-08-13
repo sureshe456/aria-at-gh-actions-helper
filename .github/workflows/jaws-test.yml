@@ -46,9 +46,9 @@ on:
           The browser to use for testing, "chrome" or "firefox", default "chrome"
         required: false
         type: string
-      jaws_url:
+      jaws_version:
         description: |
-          The download URL for the JAWS installer.
+          The version number for JAWS installer.
         required: false
         type: string
 
@@ -67,9 +67,8 @@ env:
   ARIA_AT_STATUS_URL: ${{ inputs.status_url }}
   ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header || 'x-header-param:empty' }}
   BROWSER: ${{ inputs.browser || 'chrome' }}
-  # TODO - this should probably be a version number at some point but we will use this ENV
   # var in JAWS\InstallJAWSUnattended.ps1
-  JAWS_VERSION: ${{ inputs.jaws_url || 'https://software.vfo.digital/JAWS/2025/2025.2507.149.400/92BC0086-61A8-47B4-A662-7D964ED328A2/J2025.2507.149.400-Offline-x64.exe' }}
+  JAWS_VERSION: ${{ inputs.jaws_version || 'default' }}
 
 jobs:
   jaws-test:

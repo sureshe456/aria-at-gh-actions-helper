@@ -1,4 +1,12 @@
-$URL = "$env:JAWS_VERSION"
+$URL = switch ($env:JAWS_VERSION)
+{
+    "2025.2507.149" { "https://software.vfo.digital/JAWS/2025/2025.2507.149.400/92BC0086-61A8-47B4-A662-7D964ED328A2/J2025.2507.149.400-Offline-x64.exe" }
+    # default value should point to newest - old versions that are still supported should be listed.
+    # update https://github.com/w3c/aria-at-app/blob/development/server/util/constants.js 
+    default { "https://software.vfo.digital/JAWS/2025/2025.2507.149.400/92BC0086-61A8-47B4-A662-7D964ED328A2/J2025.2507.149.400-Offline-x64.exe" }
+}
+
+Write-Host "Found version $env:JAWS_VERSION at $URL"
 
 # check if we have admin rights
 if (-Not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
