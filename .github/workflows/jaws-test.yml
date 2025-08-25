@@ -46,9 +46,9 @@ on:
           The browser to use for testing, "chrome" or "firefox", default "chrome"
         required: false
         type: string
-      jaws_url:
+      jaws_version:
         description: |
-          The download URL for the JAWS installer.
+          The version number for JAWS installer.
         required: false
         type: string
 
@@ -67,9 +67,8 @@ env:
   ARIA_AT_STATUS_URL: ${{ inputs.status_url }}
   ARIA_AT_CALLBACK_HEADER: ${{ inputs.callback_header || 'x-header-param:empty' }}
   BROWSER: ${{ inputs.browser || 'chrome' }}
-  # TODO - this should probably be a version number at some point but we will use this ENV
   # var in JAWS\InstallJAWSUnattended.ps1
-  JAWS_VERSION: ${{ inputs.jaws_url || 'https://software.vfo.digital/JAWS/2025/2025.2507.86.400/151C1CDD-F7B1-4BE2-9E0A-D0A6B043A089/J2025.2507.86.400-enu-x64.exe' }}
+  JAWS_VERSION: ${{ inputs.jaws_version || 'default' }}
 
 jobs:
   jaws-test:
@@ -94,8 +93,10 @@ jobs:
           path: "aria-at"
           ref: ${{ inputs.aria_at_ref || 'master' }}
 
+# for testing specific branch or SHA you can use
+# npm install https://github.com/w3c/aria-at-automation-harness#branch-name
       - name: Install the ARIA-AT Automation Harness package
-        run: npm install @bocoup/aria-at-automation-harness@"1.0.2"
+        run: npm install @bocoup/aria-at-automation-harness@1.1.0
 
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
