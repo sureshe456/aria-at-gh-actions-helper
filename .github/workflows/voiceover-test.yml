@@ -163,11 +163,6 @@ jobs:
 
       - name: Pre-authorize Safari AppleEvents
         run: |
-          #sudo sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db" \
-          #"INSERT OR REPLACE INTO access
-          #(service, client, client_type, auth_value, auth_reason, auth_version, csreq, policy_id, indirect_object_identifier_type, indirect_object_identifier, indirect_object_code_identity, flags, last_modified)
-          #VALUES('kTCCServiceAppleEvents','/usr/bin/osascript',1,2,0,1,NULL,NULL,0,'com.apple.Safari',NULL,NULL,strftime('%s','now'));"
-
           sudo sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db"
           "INSERT OR REPLACE INTO access
             (service, client, client_type, auth_value, auth_reason, auth_version, csreq, policy_id, indirect_object_identifier_type, indirect_object_identifier, indirect_object_code_identity, flags, last_modified)
